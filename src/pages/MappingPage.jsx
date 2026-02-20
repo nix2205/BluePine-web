@@ -285,7 +285,7 @@ export default function MappingPage() {
   useEffect(() => {
     const fetchSRC = async () => {
       try {
-        const res = await axios.get("/src/my-src");
+        const res = await axios.get("/src/my");
         setSrcCities(res.data);
       } catch (err) {
         console.error("Failed to fetch SRC:", err);
