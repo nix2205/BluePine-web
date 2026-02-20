@@ -528,9 +528,24 @@ export default function SrcTable({ srcList, srcConfig }) {
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({});
 
+  // useEffect(() => {
+  //   setRows(srcList);
+  // }, [srcList]);
+
   useEffect(() => {
-    setRows(srcList);
-  }, [srcList]);
+  const sorted = [...srcList].sort((a, b) => {
+
+    // 1️⃣ HQ always first
+    if (a.station === "HQ" && b.station !== "HQ") return -1;
+    if (a.station !== "HQ" && b.station === "HQ") return 1;
+
+    // 2️⃣ For non-HQ → alphabetical by placeOfWork
+    return a.placeOfWork.localeCompare(b.placeOfWork);
+
+  });
+
+  setRows(sorted);
+}, [srcList]);
 
   if (!srcConfig) {
     return <p className="p-4">Loading config…</p>;

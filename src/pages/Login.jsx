@@ -107,34 +107,64 @@ export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
+
   const handleLogin = async (e) => {
   e.preventDefault();
 
   try {
     const res = await axios.post(
-  `${process.env.REACT_APP_API_BASE_URL}/auth/login`,
-  { userId, password }
-);
+      `${process.env.REACT_APP_API_BASE_URL}/auth/login`,
+      { userId, password }
+    );
 
-    const user = res.data.user;
+    const { user, token } = res.data;
 
-    login(user);
-    localStorage.setItem("token", res.data.token);
+    // 🔥 store everything in ONE place
+    login(user, token);
 
     // 🔥 Role-based navigation
     if (user.role === "executive") {
       navigate("/executive-dashboard");
     } else if (user.role === "admin" || user.role === "manager") {
-      navigate("/dashboard"); // your admin dashboard route
+      navigate("/dashboard");
     } else {
-      navigate("/"); // fallback
+      navigate("/");
     }
 
   } catch (err) {
     console.error(err);
-    alert("Login failed");
+    alert(err.response?.data?.message || "Login failed");
   }
 };
+
+//   const handleLogin = async (e) => {
+//   e.preventDefault();
+
+//   try {
+//     const res = await axios.post(
+//   `${process.env.REACT_APP_API_BASE_URL}/auth/login`,
+//   { userId, password }
+// );
+
+//     const user = res.data.user;
+
+//     login(user);
+//     localStorage.setItem("token", res.data.token);
+
+//     // 🔥 Role-based navigation
+//     if (user.role === "executive") {
+//       navigate("/executive-dashboard");
+//     } else if (user.role === "admin" || user.role === "manager") {
+//       navigate("/dashboard"); // your admin dashboard route
+//     } else {
+//       navigate("/"); // fallback
+//     }
+
+//   } catch (err) {
+//     console.error(err);
+//     alert("Login failed");
+//   }
+// };
 
 
   return (

@@ -116,6 +116,7 @@
 // }
 
 
+
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import AppLayout from "../layouts/AppLayout";
@@ -141,8 +142,10 @@ export default function SrcPage() {
 
   /* Password reset */
   const [editingPassword, setEditingPassword] = useState(false);
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
+  //const [oldPassword, setOldPassword] = useState("");
+  //const [newPassword, setNewPassword] = useState("");
+  const [passwordValue, setPasswordValue] = useState("");
+  
 
   const fetchData = async () => {
     try {
@@ -155,6 +158,7 @@ export default function SrcPage() {
 
       setUser(userRes.data);
       setUsernameValue(userRes.data.username);
+      setPasswordValue(userRes.data.password || "");
       setSrcList(srcRes.data || []);
       setSrcConfig(configRes.data);
     } catch (err) {
@@ -163,6 +167,8 @@ export default function SrcPage() {
       setLoading(false);
     }
   };
+
+  
 
   useEffect(() => {
     if (userId) fetchData();
@@ -186,16 +192,14 @@ export default function SrcPage() {
   /* =====================
      RESET PASSWORD
   ===================== */
-  const resetPassword = async () => {
-    await axios.patch(`/users/${userId}/reset-password`, {
-      oldPassword,
-      newPassword,
-    });
+ const resetPassword = async () => {
+  await axios.patch(`/users/${userId}/reset-password`, {
+    newPassword: passwordValue,
+  });
 
-    setEditingPassword(false);
-    setOldPassword("");
-    setNewPassword("");
-  };
+  setEditingPassword(false);
+  fetchData();
+};
 
   /* =====================
      SAVE RS / KM
@@ -257,47 +261,35 @@ export default function SrcPage() {
               </div>
             </div>
 
-            {/* PASSWORD */}
-            <div>
-              <label className="text-xs text-gray-500">Password</label>
-              <input value="********" disabled className="input mt-1" />
+           {/* PASSWORD */}
+<div>
+  <label className="text-xs text-gray-500">Password</label>
+  <input
+    value={passwordValue}
+    disabled={!editingPassword}
+    onChange={(e) => setPasswordValue(e.target.value)}
+    className="input mt-1"
+  />
 
-              <div className="mt-2">
-                <button
-                  onClick={() => setEditingPassword(!editingPassword)}
-                  className="btn-gray"
-                >
-                  Reset Password
-                </button>
-              </div>
-            </div>
+  <div className="mt-2">
+    {editingPassword ? (
+      <button onClick={resetPassword} className="btn-blue">
+        Save
+      </button>
+    ) : (
+      <button
+        onClick={() => setEditingPassword(true)}
+        className="btn-gray"
+      >
+        Edit
+      </button>
+    )}
+  </div>
+</div>
           </div>
 
-          {/* PASSWORD RESET FORM */}
-          {editingPassword && (
-            <div className="mt-6 grid grid-cols-2 gap-4 max-w-xl">
-              <input
-                type="password"
-                placeholder="Old Password"
-                value={oldPassword}
-                onChange={(e) => setOldPassword(e.target.value)}
-                className="input"
-              />
-              <input
-                type="password"
-                placeholder="New Password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                className="input"
-              />
-
-              <div className="col-span-2">
-                <button onClick={resetPassword} className="btn-blue">
-                  Save New Password
-                </button>
-              </div>
-            </div>
-          )}
+          
+            
         </div>
 
         {/* ============tf===== RS PER KM ================= */}
