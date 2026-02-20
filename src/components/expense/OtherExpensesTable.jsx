@@ -1,0 +1,255 @@
+// // export default function OtherExpensesTable({ data }) {
+// //   const subtotal = data.reduce((s, e) => s + e.amount, 0);
+
+// //   return (
+// //     <div className="mt-8">
+// //       <h3 className="text-lg font-semibold mb-3">Other Expenses</h3>
+
+// //       <table className="w-full border text-sm">
+// //         <thead className="bg-blue-100">
+// //           <tr>
+// //             <th>SL.NO</th>
+// //             <th>DATE</th>
+// //             <th>BILL NO</th>
+// //             <th>DESCRIPTION</th>
+// //             <th>AMOUNT</th>
+// //             <th>SELECT</th>
+// //           </tr>
+// //         </thead>
+
+// //         <tbody>
+// //           {data.map((row, i) => (
+// //             <tr key={i} className="border-t text-center">
+// //               <td>{i + 1}</td>
+// //               <td>{row.date}</td>
+// //               <td>{row.billNo}</td>
+// //               <td className="text-left px-3">{row.desc}</td>
+// //               <td>{row.amount}</td>
+// //               <td>
+// //                 <input type="radio" />
+// //               </td>
+// //             </tr>
+// //           ))}
+// //         </tbody>
+// //       </table>
+
+// //       <p className="text-right mt-2 font-semibold">
+// //         Subtotal 2: ₹ {subtotal}
+// //       </p>
+// //     </div>
+// //   );
+// // }
+
+
+
+
+// // src/components/OtherExpensesTable.js
+// import React, { useState, useEffect } from "react";
+// import { Pencil } from "lucide-react";
+
+// const OtherExpensesTable = ({
+//   otherExpenses = [],
+//   onSaveExtraAmount,
+//   onSaveExtraDescription,
+//   selectedRowId,
+//   onSelectRow,
+// }) => {
+//   const [editing, setEditing] = useState({ id: null, type: null });
+//   const [tempValue, setTempValue] = useState("");
+
+//   const STORAGE_KEY = "highlightedOtherBills";
+//   const [highlighted, setHighlighted] = useState(() => {
+//     try {
+//       return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+//     } catch {
+//       return {};
+//     }
+//   });
+
+//   useEffect(() => {
+//     try {
+//       localStorage.setItem(STORAGE_KEY, JSON.stringify(highlighted));
+//     } catch {}
+//   }, [highlighted]);
+
+//   const toggleHighlight = (id) => {
+//     setHighlighted((prev) => ({ ...prev, [id]: !prev[id] }));
+//   };
+
+//   const groupedByDate = otherExpenses.reduce((acc, item) => {
+//     if (!acc[item.date]) acc[item.date] = [];
+//     acc[item.date].push(item);
+//     return acc;
+//   }, {});
+
+//   let serialNumber = 1;
+
+//   const renderAmountCell = (entry) => {
+//     const isEditingAmount =
+//       editing.id === entry._id && editing.type === "AMOUNT";
+//     const isEditingDesc =
+//       editing.id === entry._id && editing.type === "DESC";
+
+//     return (
+//       <div className="flex items-center justify-end gap-2">
+//         <span>{(entry.total || 0).toLocaleString("en-IN")}</span>
+
+//         {isEditingAmount ? (
+//           <input
+//             type="number"
+//             value={tempValue}
+//             autoFocus
+//             onChange={(e) => setTempValue(e.target.value)}
+//             onBlur={() => {
+//               onSaveExtraAmount(entry._id, Number(tempValue));
+//               setEditing({ id: null, type: null });
+//             }}
+//             onKeyDown={(e) => {
+//               if (e.key === "Enter") {
+//                 onSaveExtraAmount(entry._id, Number(tempValue));
+//                 setEditing({ id: null, type: null });
+//               }
+//             }}
+//             className="border rounded px-2 py-1 w-24 text-right hide-on-pdf"
+//           />
+//         ) : (
+//           <>
+//             {entry.extraAmount > 0 && (
+//               <span className="font-semibold text-blue-600">
+//                 +({entry.extraAmount.toLocaleString("en-IN")})
+//               </span>
+//             )}
+//             <button
+//               className="p-1 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition hide-on-pdf"
+//               onClick={() => {
+//                 setEditing({ id: entry._id, type: "AMOUNT" });
+//                 setTempValue(entry.extraAmount || 0);
+//               }}
+//             >
+//               <Pencil size={12} />
+//             </button>
+//           </>
+//         )}
+
+//         {isEditingDesc ? (
+//           <input
+//             type="text"
+//             value={tempValue}
+//             autoFocus
+//             placeholder="Extra description"
+//             onChange={(e) => setTempValue(e.target.value)}
+//             onBlur={() => {
+//               onSaveExtraDescription(entry._id, tempValue);
+//               setEditing({ id: null, type: null });
+//             }}
+//             onKeyDown={(e) => {
+//               if (e.key === "Enter") {
+//                 onSaveExtraDescription(entry._id, tempValue);
+//                 setEditing({ id: null, type: null });
+//               }
+//             }}
+//             className="border rounded px-2 py-1 w-32 hide-on-pdf"
+//           />
+//         ) : (
+//           <button
+//             className={`px-2 py-1 text-xs rounded-md ${
+//               entry.extraDescription
+//                 ? "bg-orange-500 text-white hover:bg-orange-600"
+//                 : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+//             } hide-on-pdf`}
+//             onClick={() => {
+//               setEditing({ id: entry._id, type: "DESC" });
+//               setTempValue(entry.extraDescription || "");
+//             }}
+//           >
+//             D
+//           </button>
+//         )}
+//       </div>
+//     );
+//   };
+
+//   return (
+//     <div className="overflow-x-auto rounded-lg shadow border border-gray-300">
+//       <table className="w-full border-collapse text-sm bg-white">
+//         <thead className="bg-blue-100 text-blue-950 uppercase font-semibold">
+//           <tr>
+//             <th className="border p-3 w-12 text-center">Sl.No</th>
+//             <th className="border p-3 w-32 text-center">Date</th>
+//             <th className="border p-3 w-28 text-center">Bill No</th>
+//             <th className="border p-3 w-20 text-center hide-on-pdf">Checked</th>
+//             <th className="border p-3 w-auto text-left">Description</th>
+//             <th className="border p-3 w-56 text-center">Amount</th>
+//             <th className="border p-3 w-20 text-center hide-on-pdf">Select</th>
+//           </tr>
+//         </thead>
+//         <tbody>
+//           {Object.entries(groupedByDate).map(([date, entries]) =>
+//             entries.map((entry, index) => {
+//               const isHighlighted = !!highlighted[entry._id];
+//               return (
+//                 <tr
+//                   key={entry._id}
+//                   className={`hover:bg-gray-50 ${
+//                     isHighlighted ? "bg-yellow-50" : ""
+//                   }`}
+//                 >
+//                   <td className="border p-2 text-center">
+//                     {serialNumber++}
+//                   </td>
+
+//                   {index === 0 && (
+//                     <td
+//                       rowSpan={entries.length}
+//                       className="border p-2 text-center font-semibold align-middle"
+//                     >
+//                       {date}
+//                     </td>
+//                   )}
+
+//                   <td
+//                     className={`border p-2 text-center cursor-pointer ${
+//                       isHighlighted ? "font-semibold" : ""
+//                     }`}
+//                     onClick={() => toggleHighlight(entry._id)}
+//                   >
+//                     {entry.billNo || "-"}
+//                   </td>
+
+//                   <td className="border p-2 text-center hide-on-pdf">
+//                     <input
+//                       type="checkbox"
+//                       checked={isHighlighted}
+//                       onChange={() => toggleHighlight(entry._id)}
+//                       className="h-4 w-4"
+//                     />
+//                   </td>
+
+//                   <td className="border p-2 break-words">
+//                     {entry.description}
+//                   </td>
+
+//                   <td className="border p-2 text-right">
+//                     {renderAmountCell(entry)}
+//                   </td>
+
+//                   <td className="border p-2 text-center hide-on-pdf">
+//                     <input
+//                       type="radio"
+//                       name="other_expense_selection"
+//                       checked={selectedRowId === entry._id}
+//                       onChange={() => onSelectRow(entry._id)}
+//                       className="h-4 w-4"
+//                     />
+//                   </td>
+//                 </tr>
+//               );
+//             })
+//           )}
+//         </tbody>
+//       </table>
+//     </div>
+//   );
+// };
+
+// export default OtherExpensesTable;
