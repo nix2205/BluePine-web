@@ -665,7 +665,16 @@ export default function MySRCPage() {
               </thead>
 
               <tbody>
-                {srcList.map((src) => {
+                {[...srcList]
+  .sort((a, b) => {
+    // Always keep HQ first
+    if (a.station === "HQ") return -1;
+    if (b.station === "HQ") return 1;
+
+    // Then sort remaining alphabetically by placeOfWork
+    return a.placeOfWork.localeCompare(b.placeOfWork);
+  })
+  .map((src) => {
                   const rsPerKm =
                     src.RsPerKmOverride ?? config?.RsPerKm ?? 0;
 

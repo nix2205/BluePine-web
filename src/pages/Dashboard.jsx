@@ -1176,8 +1176,9 @@ export default function Dashboard() {
                       <span>{u.prevMonth?.approvedBySuperior ? "✅" : "❌"}</span>
                     </div>
 
-                    <div className="text-xs text-slate-500 mt-1">
-                      NW Days: {u.prevMonth?.NWdays || 0}
+                    <div className="text-xs text-slate-500 mt-1 space-y-1">
+                        <div>NW Days: {u.prevMonth?.NWdays || 0}</div>
+                        <div>TR Days: {u.prevMonth?.TRdays || 0}</div>
                     </div>
                   </div>
 
@@ -1192,9 +1193,10 @@ export default function Dashboard() {
                       <span>{u.currentMonth?.approvedBySuperior ? "✅" : "❌"}</span>
                     </div>
 
-                    <div className="text-xs text-slate-500 mt-1">
-                      NW Days: {u.currentMonth?.NWdays || 0}
-                    </div>
+                    <div className="text-xs text-slate-500 mt-1 space-y-1">
+  <div>NW Days: {u.currentMonth?.NWdays || 0}</div>
+  <div>TR Days: {u.currentMonth?.TRdays || 0}</div>
+</div>
                   </div>
 
                   <div className="flex gap-3">
@@ -1213,6 +1215,13 @@ export default function Dashboard() {
                     >
                       Edit SRC
                     </button>
+
+                    <button
+  onClick={() => navigate(`/admin/mappings/${u._id}`)}
+  className="bg-indigo-600 text-white px-4 py-1 rounded-md text-sm"
+>
+  View Map
+</button>
 
                     <button
                       onClick={() => handleDeleteUser(u._id)}

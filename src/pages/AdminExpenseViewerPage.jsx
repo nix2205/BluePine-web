@@ -600,10 +600,22 @@ const [loadingApproval, setLoadingApproval] = useState(false);
               <div>
                 <span className="font-semibold">HQ:</span> {hq}
               </div>
-              <div>
+              <div className="flex gap-6">
+  <div>
+    <span className="font-semibold">NW Days:</span>{" "}
+    {approvalStatus?.NWdays ?? 0}
+  </div>
+
+  <div>
+    <span className="font-semibold">TR Days:</span>{" "}
+    {approvalStatus?.TR ?? 0}
+  </div>
+</div>
+              {/* <div>
   <span className="font-semibold">NW Days:</span>{" "}
   {approvalStatus?.NWdays ?? 0}
-</div>
+</div> */}
+
 
             </div>
 
@@ -644,12 +656,6 @@ const [loadingApproval, setLoadingApproval] = useState(false);
               Excel
             </button>
 
-            <button
-              onClick={handleDelete}
-              className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-lg font-semibold"
-            >
-              Delete
-            </button>
           </div>
         </div>
 
@@ -685,7 +691,18 @@ const [loadingApproval, setLoadingApproval] = useState(false);
           <div className="text-right mt-3 font-semibold">
             Subtotal 2: ₹ {subtotalOther.toLocaleString("en-IN")}
           </div>
+
+          
         </div>
+
+        <div className="flex justify-end mt-4">
+  <button
+    onClick={handleDelete}
+    className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-lg font-semibold"
+  >
+    Delete
+  </button>
+</div>
 
         <div className="mt-6 text-center space-y-4">
           <h2 className="text-xl font-bold text-green-600">

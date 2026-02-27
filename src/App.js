@@ -154,6 +154,7 @@ import NWPage from "./pages/NWPage";
 import OtherExpensePage from "./pages/OtherExpensePage";
 import MySRCPage from "./pages/userSRCPage";
 import UserExpenseViewerPage from "./pages/UserExpenseViewerPage";
+import AdminUserMappingPage from "./pages/AdminUserMappingPage";
 
 
 function App() {
@@ -189,6 +190,10 @@ function App() {
       <Route path="/otherexpense" element={<OtherExpensePage />} />
       <Route path="/my-src" element={<MySRCPage />} />
       <Route
+  path="/admin/mappings/:userId"
+  element={<AdminUserMappingPage />}
+/>
+      <Route
   path="/my-expenses"
   element={
     
@@ -196,6 +201,7 @@ function App() {
    
   }
 />
+
 
 
       <Route

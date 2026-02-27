@@ -188,6 +188,14 @@ export default function UserExpenseViewerPage() {
   const [loadingApproval, setLoadingApproval] = useState(false);
   const contentRef = useRef();
 
+  const isCurrentMonth =
+  selectedMonth.month === current.month() + 1 &&
+  selectedMonth.year === current.year();
+
+const isPreviousMonth =
+  selectedMonth.month === current.subtract(1, "month").month() + 1 &&
+  selectedMonth.year === current.subtract(1, "month").year();
+
 
   const monthOptions = [
     current,
@@ -376,10 +384,21 @@ const handleDownloadExcel = () => {
       <div>
         <span className="font-semibold">HQ:</span> {hq}
       </div>
-      <div>
+      <div className="flex gap-6">
+  <div>
+    <span className="font-semibold">NW Days:</span>{" "}
+    {approvalStatus?.NWdays ?? 0}
+  </div>
+
+  <div>
+    <span className="font-semibold">TR Days:</span>{" "}
+    {approvalStatus?.TR ?? 0}
+  </div>
+</div>
+      {/* <div>
   <span className="font-semibold">NW Days:</span>{" "}
   {approvalStatus?.NWdays ?? 0}
-</div>
+</div> */}
 
     </div>
 
@@ -456,7 +475,7 @@ const handleDownloadExcel = () => {
 
         {/* 🔥 APPROVAL BUTTON */}
         <div className="mt-4">
-          {isApproved ? (
+          {/* {isApproved ? (
             <div className="text-green-600 font-semibold">
               ✅ Submitted for Approval
             </div>
@@ -468,7 +487,20 @@ const handleDownloadExcel = () => {
             >
               {loadingApproval ? "Submitting..." : "Submit for Approval"}
             </button>
-          )}
+          )} */}
+          {isApproved ? (
+  <div className="text-green-600 font-semibold">
+    ✅ Submitted for Approval
+  </div>
+) : (
+  <button
+    onClick={handleSubmitApproval}
+    disabled={loadingApproval || !isPreviousMonth}
+    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded shadow disabled:opacity-50 disabled:cursor-not-allowed"
+  >
+    {loadingApproval ? "Submitting..." : "Submit for Approval"}
+  </button>
+)}
         </div>
       </div>
         </div>
