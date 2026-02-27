@@ -745,7 +745,7 @@ export default function FWPage() {
   const isAutoLocal = locationData?.autoMOT === "Local";
 
   return (
-    <AppLayout title="Field Work" backTo="/executive-dashboard">
+    <AppLayout title="FIELD WORK REPORT" backTo="/executive-dashboard">
       <div className="p-6 max-w-5xl mx-auto">
 
         {/* ================= RECORD CARD ================= */}

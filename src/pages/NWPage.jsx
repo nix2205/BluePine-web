@@ -399,7 +399,7 @@ export default function NWPage() {
   };
 
   return (
-    <AppLayout title="Mark Non-Working Day" backTo="/executive-dashboard">
+    <AppLayout title="NON-WORKING DAY REPORT" backTo="/executive-dashboard">
       <div style={styles.card}>
 
         <label style={styles.label}>Select date:</label>

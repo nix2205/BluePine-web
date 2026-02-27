@@ -316,9 +316,8 @@ export default function OtherExpensePage() {
   };
 
   return (
-    <AppLayout title="Add Other Expenses" backTo="/executive-dashboard">
+    <AppLayout title="Other Expenses" backTo="/executive-dashboard">
       <div style={styles.card}>
-        <h2>Add Other Expenses</h2>
 
         {/* Date */}
         <label style={styles.label}>Select Date:</label>
