@@ -350,7 +350,16 @@ export default function AdminExpenseViewerPage() {
   const [userInfo, setUserInfo] = useState(null);
   const [hq, setHq] = useState("-");
   const [approvalStatus, setApprovalStatus] = useState(null);
-const [loadingApproval, setLoadingApproval] = useState(false);
+  const [loadingApproval, setLoadingApproval] = useState(false);
+  const [showAddOther, setShowAddOther] = useState(false);
+
+const [newOtherExpense, setNewOtherExpense] = useState({
+  date: "",
+  billNo: "",
+  description: "",
+  amount: "",
+});
+
 
   const MONTHS = [
   "JAN", "FEB", "MAR", "APR", "MAY", "JUN",
@@ -555,7 +564,12 @@ const [loadingApproval, setLoadingApproval] = useState(false);
     0
   );
 
+
+  
+
   const grandTotal = subtotalNormal + subtotalOther;
+
+
 
   const handleApprove = async () => {
   try {
@@ -579,6 +593,42 @@ const [loadingApproval, setLoadingApproval] = useState(false);
     alert(err.response?.data?.message || "Approval failed");
   } finally {
     setLoadingApproval(false);
+  }
+};
+
+
+const handleAddOtherExpense = async () => {
+  try {
+    const payload = {
+      userId,
+      date: newOtherExpense.date || undefined,
+      billNo: newOtherExpense.billNo || undefined,
+      description: newOtherExpense.description || undefined,
+      amount: newOtherExpense.amount
+        ? Number(newOtherExpense.amount)
+        : undefined,
+    };
+
+    const { data } = await axios.post(
+      "/expense/add-other-expense-superior",
+      payload
+    );
+
+    // Update table instantly
+    setOtherExpenses((prev) => [...prev, data.expense]);
+
+    // Reset
+    setNewOtherExpense({
+      date: "",
+      billNo: "",
+      description: "",
+      amount: "",
+    });
+
+    setShowAddOther(false);
+
+  } catch (err) {
+    alert(err.response?.data?.message || "Failed to add expense");
   }
 };
 
@@ -688,9 +738,97 @@ const [loadingApproval, setLoadingApproval] = useState(false);
             setExpenses={setOtherExpenses}
           />
 
-          <div className="text-right mt-3 font-semibold">
-            Subtotal 2: ₹ {subtotalOther.toLocaleString("en-IN")}
-          </div>
+          <div className="flex justify-between items-center mt-3">
+
+  <button
+    onClick={() => setShowAddOther(!showAddOther)}
+    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold"
+  >
+    + Add
+  </button>
+
+  <div className="font-semibold">
+    Subtotal 2: ₹ {subtotalOther.toLocaleString("en-IN")}
+  </div>
+
+</div>
+
+{showAddOther && (
+  <div className="mt-4 p-4 border rounded-lg bg-blue-50 shadow-inner">
+
+    <div className="flex flex-wrap gap-4 items-end">
+
+      <div>
+        <label className="block text-xs font-semibold mb-1">Date</label>
+        <input
+          type="date"
+          value={newOtherExpense.date}
+          onChange={(e) =>
+            setNewOtherExpense({
+              ...newOtherExpense,
+              date: e.target.value,
+            })
+          }
+          className="border px-2 py-1 rounded"
+        />
+      </div>
+
+      <div>
+        <label className="block text-xs font-semibold mb-1">Bill No</label>
+        <input
+          type="text"
+          value={newOtherExpense.billNo}
+          onChange={(e) =>
+            setNewOtherExpense({
+              ...newOtherExpense,
+              billNo: e.target.value,
+            })
+          }
+          className="border px-2 py-1 rounded"
+        />
+      </div>
+
+      <div>
+        <label className="block text-xs font-semibold mb-1">Description</label>
+        <input
+          type="text"
+          value={newOtherExpense.description}
+          onChange={(e) =>
+            setNewOtherExpense({
+              ...newOtherExpense,
+              description: e.target.value,
+            })
+          }
+          className="border px-2 py-1 rounded w-56"
+        />
+      </div>
+
+      <div>
+        <label className="block text-xs font-semibold mb-1">Amount</label>
+        <input
+          type="number"
+          value={newOtherExpense.amount}
+          onChange={(e) =>
+            setNewOtherExpense({
+              ...newOtherExpense,
+              amount: e.target.value,
+            })
+          }
+          className="border px-2 py-1 rounded w-28 text-right"
+        />
+      </div>
+
+      <button
+        onClick={handleAddOtherExpense}
+        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold"
+      >
+        Submit
+      </button>
+
+    </div>
+
+  </div>
+)}
 
           
         </div>
@@ -716,7 +854,13 @@ const [loadingApproval, setLoadingApproval] = useState(false);
     !approvalStatus?.approvedByUser ||
     approvalStatus?.approvedBySuperior
   }
-  className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold disabled:opacity-50"
+  className={`px-6 py-2 rounded-lg font-semibold text-white transition-all duration-200 ${
+    loadingApproval || !approvalStatus?.approvedByUser
+      ? "bg-gray-400 cursor-not-allowed"
+      : approvalStatus?.approvedBySuperior
+      ? "bg-emerald-700 cursor-not-allowed"
+      : "bg-green-600 hover:bg-green-700"
+  }`}
 >
   {approvalStatus?.approvedBySuperior
     ? "Approved"
