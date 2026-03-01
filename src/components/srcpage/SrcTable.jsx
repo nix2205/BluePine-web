@@ -532,17 +532,30 @@ export default function SrcTable({ srcList, srcConfig }) {
   //   setRows(srcList);
   // }, [srcList]);
 
-  useEffect(() => {
+
   const sorted = [...srcList].sort((a, b) => {
 
-    // 1️⃣ HQ always first
-    if (a.station === "HQ" && b.station !== "HQ") return -1;
-    if (a.station !== "HQ" && b.station === "HQ") return 1;
+  if (a.station === "HQ") return -1;
+  if (b.station === "HQ") return 1;
 
-    // 2️⃣ For non-HQ → alphabetical by placeOfWork
-    return a.placeOfWork.localeCompare(b.placeOfWork);
+  if (a.station === "-" && b.station !== "-") return -1;
+  if (a.station !== "-" && b.station === "-") return 1;
 
-  });
+  return a.placeOfWork.localeCompare(b.placeOfWork);
+});
+
+
+  useEffect(() => {
+  // const sorted = [...srcList].sort((a, b) => {
+
+  //   // 1️⃣ HQ always first
+  //   if (a.station === "HQ" && b.station !== "HQ") return -1;
+  //   if (a.station !== "HQ" && b.station === "HQ") return 1;
+
+  //   // 2️⃣ For non-HQ → alphabetical by placeOfWork
+  //   return a.placeOfWork.localeCompare(b.placeOfWork);
+
+  // });
 
   setRows(sorted);
 }, [srcList]);
@@ -552,53 +565,97 @@ export default function SrcTable({ srcList, srcConfig }) {
   }
 
   /* ───────────── EDIT HANDLERS ───────────── */
-  const startEdit = (src) => {
-    setEditingId(src._id);
-    setEditForm({
-      placeOfWork: src.placeOfWork,
-      station: src.station,
-      radius: src.radius,
-      MOT: src.MOT,
-      kms: src.kms,
-      RsPerKm: src.RsPerKmOverride ?? "", // already exists
-      DA: src.DAOverride ?? "",
-    });
-  };
+const startEdit = (src) => {
+  setEditingId(src._id);
+  setEditForm({
+    placeOfWork: src.placeOfWork,
+    station: src.station,
+    radius: src.radius,
+    MOT: src.MOT,
+    kms: src.kms,
+    RsPerKm: src.RsPerKmOverride ?? "",
+    DA: src.DAOverride ?? "",
+    TA: src.TAOverride ?? "",   // ✅ ADD THIS
+  });
+};
 
   const cancelEdit = () => {
     setEditingId(null);
     setEditForm({});
   };
 
+
   const saveEdit = async () => {
-    try {
-      const payload = {
-        placeOfWork: editForm.placeOfWork.trim(),
-        station: editForm.station,
-        radius: Number(editForm.radius),
-        MOT: editForm.station === "HQ" ? "Local" : editForm.MOT,
-        kms: editForm.station === "HQ" ? 0 : Number(editForm.kms),
-      };
+  try {
+    const payload = {
+      station: editForm.station,
+      radius: Number(editForm.radius) || 0,
+      MOT:
+        editForm.station === "HQ"
+          ? "Local"
+          : editForm.MOT || null,
+      kms:
+        editForm.station === "HQ"
+          ? 0
+          : editForm.kms
+          ? Number(editForm.kms)
+          : null,
+    };
 
-      if (editForm.RsPerKm !== "") {
-        payload.RsPerKm = Number(editForm.RsPerKm);
-      }
+    if (editForm.RsPerKm !== "")
+      payload.RsPerKm = Number(editForm.RsPerKm);
 
-      if (editForm.DA !== "") {
-        payload.DA = Number(editForm.DA);
-      }
+    if (editForm.DA !== "")
+      payload.DA = Number(editForm.DA);
 
-      const res = await axios.put(`/src/${editingId}`, payload);
+    if (editForm.TA !== "")
+      payload.TA = Number(editForm.TA);
 
-      setRows((prev) =>
-        prev.map((r) => (r._id === editingId ? res.data : r))
-      );
+    const res = await axios.put(`/src/${editingId}`, payload);
 
-      cancelEdit();
-    } catch (err) {
-      alert(err.response?.data?.message || "Update failed");
-    }
-  };
+    setRows((prev) =>
+      prev.map((r) => (r._id === editingId ? res.data : r))
+    );
+
+    cancelEdit();
+  } catch (err) {
+    alert(err.response?.data?.message || "Update failed");
+  }
+};
+
+//   const saveEdit = async () => {
+//     try {
+//       const payload = {
+//         placeOfWork: editForm.placeOfWork.trim(),
+//         station: editForm.station,
+//         radius: Number(editForm.radius),
+//         MOT: editForm.station === "HQ" ? "Local" : editForm.MOT,
+//         kms: editForm.station === "HQ" ? 0 : Number(editForm.kms),
+//       };
+
+//       if (editForm.RsPerKm !== "") {
+//         payload.RsPerKm = Number(editForm.RsPerKm);
+//       }
+
+//       if (editForm.DA !== "") {
+//         payload.DA = Number(editForm.DA);
+//       }
+
+//       if (editForm.TA !== "") {
+//   payload.TA = Number(editForm.TA);   // ✅ ADD THIS
+// }
+
+//       const res = await axios.put(`/src/${editingId}`, payload);
+
+//       setRows((prev) =>
+//         prev.map((r) => (r._id === editingId ? res.data : r))
+//       );
+
+//       cancelEdit();
+//     } catch (err) {
+//       alert(err.response?.data?.message || "Update failed");
+//     }
+//   };
 
   const deleteRow = async (id) => {
     if (!window.confirm("Delete this place?")) return;
@@ -612,6 +669,19 @@ export default function SrcTable({ srcList, srcConfig }) {
 
   const getDA = (src) =>
     src.DAOverride ?? srcConfig.DAperStation[src.station];
+
+
+  const getTA = (src) =>
+  src.TAOverride ??
+  (src.station === "HQ"
+    ? 0
+    : (src.kms || 0) * getRsPerKm(src));
+
+
+
+  // const getTA = (src) =>
+  // src.TAOverride ??
+  // (src.station === "HQ" ? 0 : src.kms * getRsPerKm(src));
 
   const calcTA = (src) =>
     src.station === "HQ" ? 0 : src.kms * getRsPerKm(src);
@@ -630,7 +700,7 @@ export default function SrcTable({ srcList, srcConfig }) {
             <th className="px-4 py-3 text-left">HQ / EX / OS</th>
             <th className="px-4 py-3 text-left">Radius</th>
             <th className="px-4 py-3 text-left">MOT</th>
-            <th className="px-4 py-3 text-left">KM</th>
+            <th className="px-4 py-3 text-left">To&FroKMs</th>
             <th className="px-4 py-3 text-left">Rs / Km</th>
             <th className="px-4 py-3 text-left">TA</th>
             <th className="px-4 py-3 text-left">DA</th>
@@ -665,11 +735,12 @@ export default function SrcTable({ srcList, srcConfig }) {
                   {isEditing ? (
                     <select
                       className="input"
-                      value={editForm.station}
+                      value={editForm.station || "-"}
                       onChange={(e) =>
                         setEditForm({ ...editForm, station: e.target.value })
                       }
                     >
+                        <option value="-">-</option>
                       <option value="HQ">HQ</option>
                       <option value="EX">EX</option>
                       <option value="OS">OS</option>
@@ -700,12 +771,14 @@ export default function SrcTable({ srcList, srcConfig }) {
                   {isEditing ? (
                     <select
                       className="input"
-                      value={editForm.MOT}
+                      value={editForm.MOT || ""}
                       onChange={(e) =>
                         setEditForm({ ...editForm, MOT: e.target.value })
                       }
                       disabled={editForm.station === "HQ"}
                     >
+                        <option value="-">-</option>
+
                       <option value="Local">Local</option>
                       <option value="Bike">Bike</option>
                       <option value="Bus">Bus</option>
@@ -722,7 +795,7 @@ export default function SrcTable({ srcList, srcConfig }) {
                     <input
                       type="number"
                       className="input"
-                      value={editForm.kms}
+                      value={editForm.kms ?? ""}
                       onChange={(e) =>
                         setEditForm({ ...editForm, kms: e.target.value })
                       }
@@ -751,10 +824,22 @@ export default function SrcTable({ srcList, srcConfig }) {
                   )}
                 </td>
 
-                {/* TA */}
-                <td className="px-4 py-3">
-                  ₹{calcTA(src)}
-                </td>
+<td className="px-4 py-3">
+  {isEditing ? (
+    <input
+      type="number"
+      className="input"
+      placeholder={getTA(src)}
+      value={editForm.TA}
+      onChange={(e) =>
+        setEditForm({ ...editForm, TA: e.target.value })
+      }
+      disabled={editForm.station === "HQ"}
+    />
+  ) : (
+    `₹${getTA(src)}`
+  )}
+</td>
 
                 {/* DA */}
                 <td className="px-4 py-3">

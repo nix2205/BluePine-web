@@ -188,7 +188,7 @@ export default function ExecutiveDashboard() {
 const backRoute =
   user?.role === "manager" || user?.role === "admin"
     ? "/admin-dashboard"
-    : "/login";
+    : null;
 
   useEffect(() => {
     checkAnnouncement();
@@ -211,6 +211,13 @@ const backRoute =
       setLoading(false);
     }
   };
+
+  const handleLogout = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  localStorage.removeItem("company");
+  navigate("/login");
+};
 
   const handleAcknowledge = async () => {
     try {
@@ -244,8 +251,30 @@ const backRoute =
   return (
     <AppLayout
   title="Attendance & Monthly Expenses"
-  backTo={backRoute}
+  backTo={backRoute || undefined}
 >
+
+  {/* Top Header Bar */}
+<div className="flex justify-between items-center px-1 pt-1">
+
+  <div>
+    <div className="text-xl text-slate-600 mt-1">
+      Logged in as: <span className="font-semibold">
+        {user?.username} ({user?.userId})
+        </span>
+    </div>
+    
+  </div>
+
+  <button
+    onClick={handleLogout}
+    className="bg-red-700 text-white px-5 py-2 rounded-lg shadow"
+  >
+    Logout
+  </button>
+
+</div>
+
       {/* Announcement Modal */}
       {showAnnouncement && (
         <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">

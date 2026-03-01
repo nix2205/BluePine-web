@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "../../utils/axios";
 
-export default function ReassignSuperior() {
+export default function ReassignSuperior({ onSuccess }) {
   const [users, setUsers] = useState([]);
   const [employeeUserId, setEmployeeUserId] = useState("");
   const [newSuperiorUserId, setNewSuperiorUserId] = useState("");
@@ -48,7 +48,7 @@ export default function ReassignSuperior() {
       setNewSuperiorUserId("");
 
       // simplest refresh for now
-      window.location.reload();
+      if (onSuccess) onSuccess();
     } catch (err) {
       setError(
         err.response?.data?.message ||

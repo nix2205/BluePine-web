@@ -885,12 +885,27 @@ export default function NormalExpenseTable({
           expense.workType === "NFW"
             ? "bg-green-100 text-green-900"
             : expense.workType === "NW"
-            ? "bg-red-100 text-red-900"
+            ? "bg-red-100 text-red-600"
             : "hover:bg-gray-50"
         }`}
       >
-        <td className="border p-2">{serialNumber++}</td>
+{index === 0 && (
+  <td
+    className="border p-2"
+    rowSpan={expensesForDate.length}
+  >
+    {serialNumber++}
+  </td>
+)}
 
+{index === 0 && (
+  <td
+    className="border p-2"
+    rowSpan={expensesForDate.length}
+  >
+    {date}
+  </td>
+)}
         {/* ✅ Show date only once per group */}
         {index === 0 && (
           <td

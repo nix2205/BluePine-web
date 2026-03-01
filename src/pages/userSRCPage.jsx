@@ -545,71 +545,83 @@ export default function MySRCPage() {
       <div className="max-w-6xl mx-auto space-y-10 py-8">
 
         {/* ================= PROFILE CARD ================= */}
-        <div className="bg-white rounded-2xl shadow-md p-8 border border-gray-100">
-          <h2 className="text-xl font-semibold mb-6 text-[#1E3A5F] border-b border-gray-200 pb-3">
-            Profile Details
-          </h2>
+<div className="bg-white rounded-2xl shadow-md p-10 border border-gray-100">
+  <h2 className="text-xl font-semibold mb-8 text-[#1E3A5F] border-b border-gray-200 pb-4">
+    Profile Details
+  </h2>
 
-          <div className="grid md:grid-cols-3 gap-8">
+  <div className="grid md:grid-cols-3 gap-10">
 
-            <div>
-              <label className="text-sm text-gray-500 font-medium">
-                User ID
-              </label>
-              <div className="mt-2 font-medium text-lg text-gray-800">
-                {user?.userId}
-              </div>
-            </div>
+    {/* USER ID */}
+    <div className="flex flex-col space-y-3">
+      <label className="text-sm font-medium text-gray-500 tracking-wide">
+        User ID
+      </label>
+      <div className="text-lg font-semibold text-gray-800">
+        {user?.userId}
+      </div>
+    </div>
 
-            <div>
-              <label className="text-sm text-gray-500 font-medium">
-                Username
-              </label>
-              <div className="mt-2 font-medium text-lg text-gray-800">
-                {user?.username}
-              </div>
-            </div>
+    {/* USERNAME */}
+    <div className="flex flex-col space-y-3">
+      <label className="text-sm font-medium text-gray-500 tracking-wide">
+        Username
+      </label>
+      <div className="text-lg font-semibold text-gray-800">
+        {user?.username}
+      </div>
+    </div>
 
-            <div>
-              <label className="text-sm text-gray-500 font-medium">
-                Password
-              </label>
-              <div className="mt-2 text-gray-800">********</div>
+    {/* PASSWORD */}
+    <div className="flex flex-col space-y-3">
+      <label className="text-sm font-medium text-gray-500 tracking-wide">
+        Password
+      </label>
+      <div className="text-lg text-gray-800 tracking-widest">
+        ********
+      </div>
 
-              <button
-                onClick={() => setEditingPassword(!editingPassword)}
-                className="mt-3 text-sm text-[#1E3A5F] hover:underline"
-              >
-                Reset Password
-              </button>
-            </div>
-          </div>
+      <button
+        onClick={() => setEditingPassword(!editingPassword)}
+        className="text-sm text-[#1E3A5F] hover:underline pt-1"
+      >
+        Reset Password
+      </button>
+    </div>
 
-          {editingPassword && (
-            <div className="mt-6 grid md:grid-cols-2 gap-4 max-w-lg">
-              <input
-                type="password"
-                placeholder="Old Password"
-                value={oldPassword}
-                onChange={(e) => setOldPassword(e.target.value)}
-                className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#1E3A5F]"
-              />
-              <input
-                type="password"
-                placeholder="New Password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#1E3A5F]"
-              />
-              <button
-                onClick={resetPassword}
-                className="col-span-2 bg-[#1E3A5F] text-white py-2 rounded-lg hover:bg-[#16324E] transition"
-              >
-                Save New Password
-              </button>
-            </div>
-          )}
-        </div>
+  </div>
+
+  {editingPassword && (
+    <div className="mt-8 p-6 bg-gray-50 rounded-xl border border-gray-200 max-w-xl">
+      <div className="grid md:grid-cols-2 gap-5">
+
+        <input
+          type="password"
+          placeholder="Old Password"
+          value={oldPassword}
+          onChange={(e) => setOldPassword(e.target.value)}
+          className="border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#1E3A5F]"
+        />
+
+        <input
+          type="password"
+          placeholder="New Password"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          className="border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#1E3A5F]"
+        />
+
+        <button
+          onClick={resetPassword}
+          className="col-span-2 bg-[#1E3A5F] text-white py-2.5 rounded-lg hover:bg-[#16324E] transition font-medium"
+        >
+          Save New Password
+        </button>
+
+      </div>
+    </div>
+  )}
+</div>
 
         {/* ================= CONFIG CARD (NO HEADING) ================= */}
         <div className="bg-white rounded-2xl shadow-md p-8 border border-gray-100">
@@ -657,7 +669,7 @@ export default function MySRCPage() {
                   <th className="p-3">Place</th>
                   <th className="p-3">Station</th>
                   <th className="p-3">Radius</th>
-                  <th className="p-3">KMs</th>
+                  <th className="p-3">To&FroKMs</th>
                   <th className="p-3">MOT</th>
                   <th className="p-3">TA</th>
                   <th className="p-3">DA</th>

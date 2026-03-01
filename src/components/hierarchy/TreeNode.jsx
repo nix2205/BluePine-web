@@ -23,7 +23,7 @@ export default function TreeNode({ user, level = 0 }) {
 
         {/* Username */}
         <span className="font-medium">
-          {user.username}
+          {user.username} ({user.userId})
         </span>
 
         {/* Role badge */}

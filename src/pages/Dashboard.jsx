@@ -966,6 +966,7 @@ export default function Dashboard() {
   const [announcementModal, setAnnouncementModal] = useState(false);
   const [announcementText, setAnnouncementText] = useState("");
   const [announcementLoading, setAnnouncementLoading] = useState(false);
+  const loggedUser = JSON.parse(localStorage.getItem("user"));
 
   const contentRef = useRef();
 
@@ -1016,6 +1017,16 @@ export default function Dashboard() {
       console.error(err);
     }
   };
+
+  const handleLogout = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  localStorage.removeItem("company");
+  navigate("/login");
+};
+
+
+
 
   const handlePDF = async () => {
     const element = contentRef.current;
@@ -1096,50 +1107,65 @@ export default function Dashboard() {
   }
 
   return (
-    <AppLayout title="User List" backTo="/login">
+    <AppLayout title="User List">
       <div ref={contentRef}>
         <div className="p-6">
 
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold">User List</h1>
+<div className="flex justify-between items-center mb-6">
+  <div>
+    <h1 className="text-2xl font-bold">User List</h1>
+    <div className="text-sm text-slate-600 mt-1">
+      Logged in as: <span className="font-semibold">
+        {loggedUser?.username} ({loggedUser?.userId})
+      </span>
+    </div>
+  </div>
 
-            <div className="flex gap-4">
-              <button
-                onClick={() => setAnnouncementModal(true)}
-                className="bg-purple-600 text-white px-5 py-2 rounded-lg shadow"
-              >
-                📢
-              </button>
+  <div className="flex gap-4">
+    <button
+      onClick={() => setAnnouncementModal(true)}
+      className="bg-purple-600 text-white px-5 py-2 rounded-lg shadow"
+    >
+      📢
+    </button>
 
-              <button
-                onClick={handlePDF}
-                className="bg-green-600 text-white px-5 py-2 rounded-lg shadow"
-              >
-                📄 PDF
-              </button>
+    <button
+      onClick={handlePDF}
+      className="bg-green-600 text-white px-5 py-2 rounded-lg shadow"
+    >
+      📄 PDF
+    </button>
 
-              <button
-                onClick={handleExcel}
-                className="bg-yellow-500 text-white px-5 py-2 rounded-lg shadow"
-              >
-                📊 Excel
-              </button>
+    <button
+      onClick={handleExcel}
+      className="bg-yellow-500 text-white px-5 py-2 rounded-lg shadow"
+    >
+      📊 Excel
+    </button>
 
-              <button
-                onClick={() => navigate("/add-user")}
-                className="bg-[#1f3a5f] text-white px-6 py-2 rounded-lg shadow"
-              >
-                ➕ Add User
-              </button>
+    <button
+      onClick={() => navigate("/add-user")}
+      className="bg-[#1f3a5f] text-white px-6 py-2 rounded-lg shadow"
+    >
+      ➕ Add User
+    </button>
 
-              <button
-                onClick={() => navigate("/executive-dashboard")}
-                className="bg-[#2C3E65] text-white px-5 py-2 rounded-lg shadow"
-              >
-                👤 My Dashboard
-              </button>
-            </div>
-          </div>
+    <button
+      onClick={() => navigate("/executive-dashboard")}
+      className="bg-[#2C3E65] text-white px-5 py-2 rounded-lg shadow"
+    >
+      👤 My Dashboard
+    </button>
+
+    {/* NEW LOGOUT BUTTON */}
+    <button
+      onClick={handleLogout}
+      className="bg-red-700 text-white px-5 py-2 rounded-lg shadow"
+    >
+      Logout
+    </button>
+  </div>
+</div>
 
           <div className="space-y-4">
             {users.map((u, index) => (

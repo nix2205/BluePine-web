@@ -625,18 +625,23 @@ export default function OtherExpenseTable({
                     isHighlighted ? "bg-yellow-50" : ""
                   }`}
                 >
-                  <td className="border p-2 text-center">
-                    {serialNumber++}
-                  </td>
-
                   {index === 0 && (
-                    <td
-                      rowSpan={grouped[date].length}
-                      className="border p-2 text-center font-semibold align-middle"
-                    >
-                      {date}
-                    </td>
-                  )}
+  <td
+    rowSpan={grouped[date].length}
+    className="border p-2 text-center align-middle"
+  >
+    {serialNumber++}
+  </td>
+)}
+
+{index === 0 && (
+  <td
+    rowSpan={grouped[date].length}
+    className="border p-2 text-center font-semibold align-middle"
+  >
+    {date}
+  </td>
+)}
 
                   <td
                     className="border p-2 text-center cursor-pointer"

@@ -420,7 +420,7 @@ export default function AddNewSRC({ setRows }) {
         <input
           type="number"
           min="0"
-          placeholder="KM"
+          placeholder="To&FroKMs"
           value={form.kms}
           onChange={(e) =>
             setForm({ ...form, kms: e.target.value })

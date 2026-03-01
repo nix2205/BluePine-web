@@ -204,13 +204,31 @@ export default function SrcPage() {
   /* =====================
      SAVE RS / KM
   ===================== */
+  // const saveRsPerKm = async () => {
+  //   await axios.patch(`/src-config/rsperkM/${userId}`, {
+  //     RsPerKm: Number(rsValue),
+  //   });
+  //   setEditingRs(false);
+  //   fetchData();
+  // };
+
   const saveRsPerKm = async () => {
-    await axios.patch(`/src-config/rsperkM/${userId}`, {
-      RsPerKm: Number(rsValue),
-    });
-    setEditingRs(false);
-    fetchData();
-  };
+  const confirmChange = window.confirm(
+    "If you change configs, all SRCs will be changed. Continue?"
+  );
+
+  if (!confirmChange) return;
+
+  await axios.patch(`/src-config/rsperkM/${userId}`, {
+    RsPerKm: Number(rsValue),
+  });
+
+  // 🔥 Apply config to all non-edited SRCs
+  await axios.put(`/src-config/apply/${userId}`);
+
+  setEditingRs(false);
+  fetchData();
+};
 
   if (loading || !srcConfig || !user) {
     return (
@@ -224,73 +242,81 @@ export default function SrcPage() {
     <AppLayout title="Edit SRC" backTo="/admin">
       <div className="space-y-8">
 
-        {/* ================= USER DETAILS ================= */}
-        <div className="bg-white p-6 rounded-xl shadow">
-          <h2 className="font-semibold text-lg mb-4">User Details</h2>
+        <div className="bg-white p-8 rounded-xl shadow">
+  <h2 className="font-semibold text-lg mb-6">User Details</h2>
 
-          <div className="grid grid-cols-3 gap-6">
+  <div className="grid md:grid-cols-3 gap-8">
 
-            {/* USER ID */}
-            <div>
-              <label className="text-xs text-gray-500">User ID</label>
-              <input value={user.userId} disabled className="input mt-1" />
-            </div>
+    {/* USER ID */}
+    <div className="flex flex-col space-y-2">
+      <label className="text-sm text-gray-500 font-medium">
+        User ID
+      </label>
+      <input
+        value={user.userId}
+        disabled
+        className="input"
+      />
+    </div>
 
-            {/* USERNAME */}
-            <div>
-              <label className="text-xs text-gray-500">Username</label>
-              <input
-                value={usernameValue}
-                disabled={!editingUsername}
-                onChange={(e) => setUsernameValue(e.target.value)}
-                className="input mt-1"
-              />
-              <div className="mt-2">
-                {editingUsername ? (
-                  <button onClick={saveUsername} className="btn-blue">
-                    Save
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => setEditingUsername(true)}
-                    className="btn-gray"
-                  >
-                    Edit
-                  </button>
-                )}
-              </div>
-            </div>
+    {/* USERNAME */}
+    <div className="flex flex-col space-y-2">
+      <label className="text-sm text-gray-500 font-medium">
+        Username
+      </label>
+      <input
+        value={usernameValue}
+        disabled={!editingUsername}
+        onChange={(e) => setUsernameValue(e.target.value)}
+        className="input"
+      />
 
-           {/* PASSWORD */}
-<div>
-  <label className="text-xs text-gray-500">Password</label>
-  <input
-    value={passwordValue}
-    disabled={!editingPassword}
-    onChange={(e) => setPasswordValue(e.target.value)}
-    className="input mt-1"
-  />
+      <div className="pt-1">
+        {editingUsername ? (
+          <button onClick={saveUsername} className="btn-blue">
+            Save
+          </button>
+        ) : (
+          <button
+            onClick={() => setEditingUsername(true)}
+            className="btn-gray"
+          >
+            Edit
+          </button>
+        )}
+      </div>
+    </div>
 
-  <div className="mt-2">
-    {editingPassword ? (
-      <button onClick={resetPassword} className="btn-blue">
-        Save
-      </button>
-    ) : (
-      <button
-        onClick={() => setEditingPassword(true)}
-        className="btn-gray"
-      >
-        Edit
-      </button>
-    )}
+    {/* PASSWORD */}
+    <div className="flex flex-col space-y-2">
+      <label className="text-sm text-gray-500 font-medium">
+        Password
+      </label>
+      <input
+        value={passwordValue}
+        disabled={!editingPassword}
+        onChange={(e) => setPasswordValue(e.target.value)}
+        className="input"
+      />
+
+      <div className="pt-1">
+        {editingPassword ? (
+          <button onClick={resetPassword} className="btn-blue">
+            Save
+          </button>
+        ) : (
+          <button
+            onClick={() => setEditingPassword(true)}
+            className="btn-gray"
+          >
+            Edit
+          </button>
+        )}
+      </div>
+    </div>
+
   </div>
 </div>
-          </div>
-
-          
-            
-        </div>
 
         {/* ============tf===== RS PER KM ================= */}
         <div className="bg-white p-6 rounded-xl shadow max-w-md">

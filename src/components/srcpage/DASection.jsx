@@ -25,19 +25,40 @@ export default function DASection({ userId, srcConfig, onUpdate }) {
     }
   }, [srcConfig]);
 
+  // const saveDA = async (station) => {
+  //   try {
+  //     await axios.patch(`/src-config/da/${userId}/${station}`, {
+  //       DA: Number(daValues[station]),
+  //     });
+
+  //     setEditing((prev) => ({ ...prev, [station]: false }));
+  //     onUpdate();
+  //   } catch (err) {
+  //     alert(err.response?.data?.message || "DA update failed");
+  //   }
+  // };
+
   const saveDA = async (station) => {
-    try {
-      await axios.patch(`/src-config/da/${userId}/${station}`, {
-        DA: Number(daValues[station]),
-      });
+  try {
+    const confirmChange = window.confirm(
+      "If you change configs, all SRCs will be changed. Continue?"
+    );
 
-      setEditing((prev) => ({ ...prev, [station]: false }));
-      onUpdate();
-    } catch (err) {
-      alert(err.response?.data?.message || "DA update failed");
-    }
-  };
+    if (!confirmChange) return;
 
+    await axios.patch(`/src-config/da/${userId}/${station}`, {
+      DA: Number(daValues[station]),
+    });
+
+    // 🔥 Apply config globally
+    await axios.put(`/src-config/apply/${userId}`);
+
+    setEditing((prev) => ({ ...prev, [station]: false }));
+    onUpdate();
+  } catch (err) {
+    alert(err.response?.data?.message || "DA update failed");
+  }
+};
   return (
     <div className="bg-white p-4 rounded shadow">
       <h2 className="font-semibold text-lg mb-4">DA per Station</h2>
