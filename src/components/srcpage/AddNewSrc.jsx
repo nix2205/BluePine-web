@@ -319,6 +319,7 @@ export default function AddNewSRC({ setRows }) {
     kms: "",
     RsPerKm: "",
     DA: "",
+    TA: "",
   });
 
   const submit = async () => {
@@ -335,6 +336,10 @@ export default function AddNewSRC({ setRows }) {
       if (form.RsPerKm !== "") {
         payload.RsPerKm = Number(form.RsPerKm);
       }
+
+      if (form.TA !== "") {
+  payload.TA = Number(form.TA);
+}
 
       if (form.DA !== "") {
         payload.DA = Number(form.DA);
@@ -353,6 +358,7 @@ export default function AddNewSRC({ setRows }) {
         kms: "",
         RsPerKm: "",
         DA: "",
+        TA: "",
       });
 
     } catch (err) {
@@ -364,7 +370,7 @@ export default function AddNewSRC({ setRows }) {
     <div className="mt-6 border-t pt-6">
       <h3 className="font-semibold text-lg mb-4">Add New Place</h3>
 
-      <div className="grid grid-cols-7 gap-4">
+      <div className="grid grid-cols-8 gap-4">
 
         {/* PLACE */}
         <input
@@ -441,6 +447,19 @@ export default function AddNewSRC({ setRows }) {
           className="input"
           disabled={form.station === "HQ"}
         />
+
+        {/* TA Override */}
+<input
+  type="number"
+  min="0"
+  placeholder="TA (optional)"
+  value={form.TA}
+  onChange={(e) =>
+    setForm({ ...form, TA: e.target.value })
+  }
+  className="input"
+  disabled={form.station === "HQ"}  // optional, keeps logic consistent
+/>
 
         {/* DA Override */}
         <input
