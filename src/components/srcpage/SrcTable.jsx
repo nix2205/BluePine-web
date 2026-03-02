@@ -95,7 +95,7 @@
 // // //             <th className="px-4 py-3 text-left">KM</th>
 // // //             <th className="px-4 py-3 text-left">TA</th>
 // // //             <th className="px-4 py-3 text-left">DA</th>
-// // //             <th className="px-4 py-3 text-center">Actions</th>
+// // //             <th className="px-4 py-3 text-left">Actions</th>
 // // //           </tr>
 // // //         </thead>
 
@@ -198,9 +198,9 @@
 // // //                 </td>
 
 // // //                 {/* ACTIONS */}
-// // //                 <td className="px-4 py-3 text-center">
+// // //                 <td className="px-4 py-3 text-left">
 // // //                   {isEditing ? (
-// // //                     <div className="flex gap-2 justify-center">
+// // //                     <div className="flex gap-2 justify-left">
 // // //                       <button onClick={saveEdit} className="btn-submit">
 // // //                         Save
 // // //                       </button>
@@ -209,7 +209,7 @@
 // // //                       </button>
 // // //                     </div>
 // // //                   ) : (
-// // //                     <div className="flex gap-2 justify-center">
+// // //                     <div className="flex gap-2 justify-left">
 // // //                       <button
 // // //                         onClick={() => startEdit(src)}
 // // //                         className="btn-edit"
@@ -345,7 +345,7 @@
 // //             <th className="px-4 py-3 text-left">Rs / Km</th>
 // //             <th className="px-4 py-3 text-left">TA</th>
 // //             <th className="px-4 py-3 text-left">DA</th>
-// //             <th className="px-4 py-3 text-center">Actions</th>
+// //             <th className="px-4 py-3 text-left">Actions</th>
 // //           </tr>
 // //         </thead>
 
@@ -472,9 +472,9 @@
 // //                 </td>
 
 // //                 {/* ACTIONS */}
-// //                 <td className="px-4 py-3 text-center">
+// //                 <td className="px-4 py-3 text-left">
 // //                   {isEditing ? (
-// //                     <div className="flex gap-2 justify-center">
+// //                     <div className="flex gap-2 justify-left">
 // //                       <button onClick={saveEdit} className="btn-submit">
 // //                         Save
 // //                       </button>
@@ -483,7 +483,7 @@
 // //                       </button>
 // //                     </div>
 // //                   ) : (
-// //                     <div className="flex gap-2 justify-center">
+// //                     <div className="flex gap-2 justify-left">
 // //                       <button
 // //                         onClick={() => startEdit(src)}
 // //                         className="btn-edit"
@@ -704,7 +704,7 @@
 //             <th className="px-4 py-3 text-left">Rs / Km</th>
 //             <th className="px-4 py-3 text-left">TA</th>
 //             <th className="px-4 py-3 text-left">DA</th>
-//             <th className="px-4 py-3 text-center">Actions</th>
+//             <th className="px-4 py-3 text-left">Actions</th>
 //           </tr>
 //         </thead>
 
@@ -859,9 +859,9 @@
 //                 </td>
 
 //                 {/* ACTIONS */}
-//                 <td className="px-4 py-3 text-center">
+//                 <td className="px-4 py-3 text-left">
 //                   {isEditing ? (
-//                     <div className="flex gap-2 justify-center">
+//                     <div className="flex gap-2 justify-left">
 //                       <button onClick={saveEdit} className="btn-submit">
 //                         Save
 //                       </button>
@@ -870,7 +870,7 @@
 //                       </button>
 //                     </div>
 //                   ) : (
-//                     <div className="flex gap-2 justify-center">
+//                     <div className="flex gap-2 justify-left">
 //                       <button
 //                         onClick={() => startEdit(src)}
 //                         className="btn-edit"
@@ -907,7 +907,7 @@ import { useState, useEffect } from "react";
 import axios from "../../utils/axios";
 import AddNewSRC from "../srcpage/AddNewSrc";
 
-export default function SrcTable({ srcList, srcConfig }) {
+export default function SrcTable({ srcList, srcConfig, viewedUserRole }) {
   const [rows, setRows] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({});
@@ -942,6 +942,12 @@ export default function SrcTable({ srcList, srcConfig }) {
       TA: src.TAOverride ?? "",
     });
   };
+
+  const showUserColumn =
+  viewedUserRole === "admin" || viewedUserRole === "manager";
+
+  const showUserId =
+  viewedUserRole === "admin" || viewedUserRole === "manager";
 
   const cancelEdit = () => {
     setEditingId(null);
@@ -1014,17 +1020,30 @@ export default function SrcTable({ srcList, srcConfig }) {
       {/* ✅ table-fixed added */}
       <table className="w-full text-sm table-fixed">
         <thead className="bg-blue-900 text-white">
+          {/* <tr>
+            <th className="px-4 py-3 text-left w-64">Place</th>
+            <th className="px-4 py-3 text-left w-24">HQ/EX/OS</th>
+            <th className="px-4 py-3 text-left w-24">Radius</th>
+            <th className="px-4 py-3 text-left w-24">MOT</th>
+            <th className="px-4 py-3 text-left w-24">To&FroKMs</th>
+            <th className="px-4 py-3 text-left w-24">Rs/Km</th>
+            <th className="px-4 py-3 text-left w-28">TA</th>
+            <th className="px-4 py-3 text-left w-28">DA</th>
+            <th className="px-4 py-3 text-left w-40">Actions</th>
+          </tr> */}
+
           <tr>
-            <th className="px-4 py-3 text-left">Place</th>
-            <th className="px-4 py-3 text-left">HQ / EX / OS</th>
-            <th className="px-4 py-3 text-left">Radius</th>
-            <th className="px-4 py-3 text-left">MOT</th>
-            <th className="px-4 py-3 text-left">To&FroKMs</th>
-            <th className="px-4 py-3 text-left">Rs / Km</th>
-            <th className="px-4 py-3 text-left">TA</th>
-            <th className="px-4 py-3 text-left">DA</th>
-            <th className="px-4 py-3 text-center">Actions</th>
-          </tr>
+  <th className="px-4 py-3 text-left w-56">Place</th>
+  <th className="px-4 py-3 text-left w-20">HQ/EX/OS</th>
+  <th className="px-4 py-3 text-left w-20">Radius</th>
+  <th className="px-4 py-3 text-left w-24">MOT</th>
+  <th className="px-4 py-3 text-left w-24">To&FroKMs</th>
+  <th className="px-4 py-3 text-left w-24">Rs/Km</th>
+  <th className="px-4 py-3 text-left w-24">TA</th>
+  <th className="px-4 py-3 text-left w-24">DA</th>
+  <th className="px-4 py-3 text-left w-32">Actions</th>
+</tr>
+
         </thead>
 
         <tbody className="divide-y">
@@ -1041,7 +1060,7 @@ export default function SrcTable({ srcList, srcConfig }) {
                 }`}
               >
                 {/* PLACE */}
-                <td className="px-4 py-3">
+                {/* <td className="px-4 py-3">
                   {isEditing ? (
                     <input
                       className="input w-full"
@@ -1053,7 +1072,51 @@ export default function SrcTable({ srcList, srcConfig }) {
                   ) : (
                     src.placeOfWork
                   )}
-                </td>
+                </td> */}
+
+
+                {/* PLACE */}
+{/* <td className="px-4 py-3">
+  {isEditing ? (
+    <input
+      className="input w-full"
+      value={editForm.placeOfWork}
+      onChange={(e) =>
+        setEditForm({ ...editForm, placeOfWork: e.target.value })
+      }
+    />
+  ) : (
+    <span>
+      {src.placeOfWork}
+      {showUserId && src.originUser?.userId && (
+        <span className="text-gray-600 text-s ml-1">
+          ({src.originUser.userId})
+        </span>
+      )}
+    </span>
+  )}
+</td> */}
+
+<td className="px-4 py-3">
+  {isEditing ? (
+    <input
+      className="input w-full"
+      value={editForm.placeOfWork}
+      onChange={(e) =>
+        setEditForm({ ...editForm, placeOfWork: e.target.value })
+      }
+    />
+  ) : (
+    <span className="block truncate">
+      {src.placeOfWork}
+      {showUserId && src.originUser?.userId && (
+        <span className="text-gray-500 text-xs ml-1">
+          ({src.originUser.userId})
+        </span>
+      )}
+    </span>
+  )}
+</td>
 
                 {/* STATION */}
                 <td className="px-4 py-3">
@@ -1183,10 +1246,16 @@ export default function SrcTable({ srcList, srcConfig }) {
                   )}
                 </td>
 
+                {/* {showUserColumn && (
+  <td className="px-4 py-3">
+    {src.originUser?.userId || "-"}
+  </td>
+)} */}
+
                 {/* ACTIONS */}
-                <td className="px-4 py-3 text-center">
+                <td className="px-4 py-3 text-left">
                   {isEditing ? (
-                    <div className="flex gap-2 justify-center">
+                    <div className="flex gap-2 justify-left">
                       <button onClick={saveEdit} className="btn-submit">
                         Save
                       </button>
@@ -1195,7 +1264,7 @@ export default function SrcTable({ srcList, srcConfig }) {
                       </button>
                     </div>
                   ) : (
-                    <div className="flex gap-2 justify-center">
+                    <div className="flex gap-2 justify-left">
                       <button
                         onClick={() => startEdit(src)}
                         className="btn-edit"

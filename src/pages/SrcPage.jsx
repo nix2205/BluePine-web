@@ -351,7 +351,7 @@ export default function SrcPage() {
         <DASection userId={userId} srcConfig={srcConfig} onUpdate={fetchData} />
 
         {/* ================= SRC TABLE ================= */}
-        <SrcTable srcList={srcList} srcConfig={srcConfig} />
+        <SrcTable srcList={srcList} srcConfig={srcConfig}   viewedUserRole={user.role}/>
 
       </div>
     </AppLayout>
