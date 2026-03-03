@@ -207,49 +207,94 @@ const isPreviousMonth =
   }));
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { month, year } = selectedMonth;
+  const fetchData = async () => {
+    try {
+      const { month, year } = selectedMonth;
 
-        const startDate = dayjs(`${year}-${month}-01`)
-          .startOf("month")
-          .format("YYYY-MM-DD");
+      const startDate = dayjs(`${year}-${month}-01`)
+  .startOf("month")
+  .format("DD-MM-YYYY");
 
-        const endDate = dayjs(`${year}-${month}-01`)
-          .endOf("month")
-          .format("YYYY-MM-DD");
+const endDate = dayjs(`${year}-${month}-01`)
+  .endOf("month")
+  .format("DD-MM-YYYY");
 
-        const { data } = await axios.get(
-          `/expense/my?startDate=${startDate}&endDate=${endDate}`
-        );
+      const { data } = await axios.get(
+        `/expense/my?startDate=${startDate}&endDate=${endDate}`
+      );
 
-        setNormalExpenses(data.normalExpenses || []);
-        setOtherExpenses(data.otherExpenses || []);
+      setNormalExpenses(data.normalExpenses || []);
+      setOtherExpenses(data.otherExpenses || []);
 
-        const userRes = await axios.get("/users/me");
-        setUserInfo(userRes.data);
+      const userRes = await axios.get("/users/me");
+      setUserInfo(userRes.data);
 
-        const hqRes = await axios.get("/src/hq/me");
-        setHq(hqRes.data?.placeOfWork || "-");
+      const hqRes = await axios.get("/src/hq/me");
+      setHq(hqRes.data?.placeOfWork || "-");
 
-        // 🔥 Fetch approvals
-        const approvalRes = await axios.get("/approvals/me");
+      const approvalRes = await axios.get("/approvals/me");
 
-        const selectedMonthCode = MONTHS[month - 1];
+      const selectedMonthCode = MONTHS[month - 1];
 
-        const thisMonthApproval = approvalRes.data.find(
-          (a) => a.month === selectedMonthCode
-        );
+      const thisMonthApproval = approvalRes.data.find(
+        (a) => a.month === selectedMonthCode
+      );
 
-        setApprovalStatus(thisMonthApproval || null);
+      setApprovalStatus(thisMonthApproval || null);
 
-      } catch (err) {
-        console.error(err);
-      }
-    };
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-    fetchData();
-  }, [selectedMonth]);
+  fetchData();
+}, [selectedMonth]);
+
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const { month, year } = selectedMonth;
+
+  //       const startDate = dayjs(`${year}-${month}-01`)
+  //         .startOf("month")
+  //         .format("YYYY-MM-DD");
+
+  //       const endDate = dayjs(`${year}-${month}-01`)
+  //         .endOf("month")
+  //         .format("YYYY-MM-DD");
+
+  //       const { data } = await axios.get(
+  //         `/expense/my?startDate=${startDate}&endDate=${endDate}`
+  //       );
+
+  //       setNormalExpenses(data.normalExpenses || []);
+  //       setOtherExpenses(data.otherExpenses || []);
+
+  //       const userRes = await axios.get("/users/me");
+  //       setUserInfo(userRes.data);
+
+  //       const hqRes = await axios.get("/src/hq/me");
+  //       setHq(hqRes.data?.placeOfWork || "-");
+
+  //       // 🔥 Fetch approvals
+  //       const approvalRes = await axios.get("/approvals/me");
+
+  //       const selectedMonthCode = MONTHS[month - 1];
+
+  //       const thisMonthApproval = approvalRes.data.find(
+  //         (a) => a.month === selectedMonthCode
+  //       );
+
+  //       setApprovalStatus(thisMonthApproval || null);
+
+  //     } catch (err) {
+  //       console.error(err);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, [selectedMonth]);
 
   const subtotalNormal = normalExpenses.reduce(
     (sum, e) => sum + (e.total || 0),
@@ -325,7 +370,7 @@ const handleDownloadExcel = () => {
   const combinedData = [
     ...normalExpenses.map((e) => ({
       Type: "Normal",
-      Date: dayjs(e.date).format("DD/MM/YYYY"),
+      Date: dayjs(e.date, "DD-MM-YYYY").format("DD-MM-YYYY"),
       WorkType: e.workType,
       Place: e.placeOfWork,
       Station: e.station,
@@ -339,7 +384,7 @@ const handleDownloadExcel = () => {
     })),
     ...otherExpenses.map((e) => ({
       Type: "Other",
-      Date: dayjs(e.date).format("DD/MM/YYYY"),
+      Date: dayjs(e.date, "DD-MM-YYYY").format("DD-MM-YYYY"),
       Description: e.description,
       Amount: e.amount,
       ExtraAmount: e.extraAmount,

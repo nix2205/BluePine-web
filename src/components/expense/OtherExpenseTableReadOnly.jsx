@@ -153,19 +153,144 @@
 
 
 
+// import React, { useState } from "react";
+// import dayjs from "dayjs";
+
+// export default function OtherExpenseTableReadOnly({ expenses = [] }) {
+//   const [expandedId, setExpandedId] = useState(null);
+
+//   const sortedExpenses = [...expenses].sort(
+//     (a, b) => new Date(a.date) - new Date(b.date)
+//   );
+
+//   // Group by date
+//   const grouped = sortedExpenses.reduce((acc, expense) => {
+//     const formattedDate = dayjs(expense.date).format("DD/MM/YYYY");
+//     if (!acc[formattedDate]) acc[formattedDate] = [];
+//     acc[formattedDate].push(expense);
+//     return acc;
+//   }, {});
+
+//   let serialNumber = 1;
+
+//   const toggleExpand = (id) => {
+//     setExpandedId((prev) => (prev === id ? null : id));
+//   };
+
+//   return (
+//     <div className="overflow-x-auto border rounded-lg shadow-sm">
+//       <table className="w-full text-sm border-collapse bg-white">
+//         <thead className="bg-blue-100 text-blue-900 uppercase">
+//           <tr>
+//             <th className="border p-3">S.NO</th>
+//             <th className="border p-3">DATE</th>
+//             <th className="border p-3">BILL NO</th>
+//             <th className="border p-3">DESCRIPTION</th>
+//             <th className="border p-3">AMOUNT</th>
+//             <th className="border p-3">TOTAL</th>
+//           </tr>
+//         </thead>
+
+//         <tbody>
+//           {Object.keys(grouped).map((date) =>
+//             grouped[date].map((expense, index) => (
+//               <React.Fragment key={expense._id}>
+//                 <tr className="text-center hover:bg-gray-50">
+//                   {index === 0 && (
+//   <td
+//     rowSpan={grouped[date].length}
+//     className="border p-2 text-center align-middle"
+//   >
+//     {serialNumber++}
+//   </td>
+// )}
+
+// {index === 0 && (
+//   <td
+//     rowSpan={grouped[date].length}
+//     className="border p-2 text-center font-semibold align-middle"
+//   >
+//     {date}
+//   </td>
+// )}
+
+//                   <td className="border p-2">{expense.billNo}</td>
+
+//                   <td className="border p-2">
+//                     {expense.description}
+//                   </td>
+
+//                   {/* AMOUNT */}
+//                   <td className="border p-2">
+//                     {expense.amount}
+//                     {expense.extraAmount > 0 && (
+//                       <span className="ml-1 font-semibold">
+//                         +({expense.extraAmount})
+//                       </span>
+//                     )}
+
+//                     {expense.extraDescription && (
+//                       <button
+//                         onClick={() =>
+//                           toggleExpand(expense._id)
+//                         }
+//                         className="ml-2 px-2 py-1 text-xs rounded bg-orange-500 text-white hover:bg-orange-600"
+//                       >
+//                         D
+//                       </button>
+//                     )}
+//                   </td>
+
+//                   <td className="border p-2 font-bold">
+//                     {expense.total}
+//                   </td>
+//                 </tr>
+
+//                 {expandedId === expense._id && (
+//                   <tr className="bg-yellow-50">
+//                     <td
+//                       colSpan="6"
+//                       className="border p-4 text-center italic text-gray-700"
+//                     >
+//                       {expense.extraDescription}
+//                     </td>
+//                   </tr>
+//                 )}
+//               </React.Fragment>
+//             ))
+//           )}
+//         </tbody>
+//       </table>
+//     </div>
+//   );
+// }
+
+
+
+
+
+
+
+
 import React, { useState } from "react";
 import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 
+dayjs.extend(customParseFormat);
 export default function OtherExpenseTableReadOnly({ expenses = [] }) {
   const [expandedId, setExpandedId] = useState(null);
 
-  const sortedExpenses = [...expenses].sort(
-    (a, b) => new Date(a.date) - new Date(b.date)
-  );
-
+ const sortedExpenses = [...expenses].sort(
+  (a, b) =>
+    dayjs(a.date, "DD-MM-YYYY").valueOf() -
+    dayjs(b.date, "DD-MM-YYYY").valueOf()
+);
   // Group by date
   const grouped = sortedExpenses.reduce((acc, expense) => {
-    const formattedDate = dayjs(expense.date).format("DD/MM/YYYY");
+    const formattedDate = dayjs(
+  expense.date,
+  "DD-MM-YYYY"
+).format("DD/MM/YYYY");
     if (!acc[formattedDate]) acc[formattedDate] = [];
     acc[formattedDate].push(expense);
     return acc;
@@ -197,22 +322,22 @@ export default function OtherExpenseTableReadOnly({ expenses = [] }) {
               <React.Fragment key={expense._id}>
                 <tr className="text-center hover:bg-gray-50">
                   {index === 0 && (
-  <td
-    rowSpan={grouped[date].length}
-    className="border p-2 text-center align-middle"
-  >
-    {serialNumber++}
-  </td>
-)}
+                    <td
+                      rowSpan={grouped[date].length}
+                      className="border p-2 text-center align-middle"
+                    >
+                      {serialNumber++}
+                    </td>
+                  )}
 
-{index === 0 && (
-  <td
-    rowSpan={grouped[date].length}
-    className="border p-2 text-center font-semibold align-middle"
-  >
-    {date}
-  </td>
-)}
+                  {index === 0 && (
+                    <td
+                      rowSpan={grouped[date].length}
+                      className="border p-2 text-center font-semibold align-middle"
+                    >
+                      {date}
+                    </td>
+                  )}
 
                   <td className="border p-2">{expense.billNo}</td>
 

@@ -414,7 +414,7 @@ const [newOtherExpense, setNewOtherExpense] = useState({
     const combinedData = [
       ...normalExpenses.map((e) => ({
         Type: "Normal",
-        Date: dayjs(e.date).format("DD/MM/YYYY"),
+        Date: dayjs(e.date, "DD-MM-YYYY").format("DD-MM-YYYY"),
         WorkType: e.workType,
         Place: e.placeOfWork,
         Station: e.station,
@@ -428,7 +428,7 @@ const [newOtherExpense, setNewOtherExpense] = useState({
       })),
       ...otherExpenses.map((e) => ({
         Type: "Other",
-        Date: dayjs(e.date).format("DD/MM/YYYY"),
+        Date: dayjs(e.date, "DD-MM-YYYY").format("DD-MM-YYYY"),
         Description: e.description,
         Amount: e.amount,
         ExtraAmount: e.extraAmount,
@@ -454,67 +454,126 @@ const [newOtherExpense, setNewOtherExpense] = useState({
   };
 
   useEffect(() => {
-    if (!userId) return;
+  if (!userId) return;
 
-    const fetchExpenses = async () => {
-      try {
-        const { month, year } = selectedMonth;
+  const fetchExpenses = async () => {
+    try {
+      const { month, year } = selectedMonth;
 
-        const startDate = dayjs(`${year}-${month}-01`)
-          .startOf("month")
-          .format("YYYY-MM-DD");
+      const startDate = dayjs(`${year}-${month}-01`)
+  .startOf("month")
+  .format("DD-MM-YYYY");
 
-        const endDate = dayjs(`${year}-${month}-01`)
-          .endOf("month")
-          .format("YYYY-MM-DD");
+const endDate = dayjs(`${year}-${month}-01`)
+  .endOf("month")
+  .format("DD-MM-YYYY");
 
-        const { data } = await axios.get(
-          `/expense?userId=${userId}&startDate=${startDate}&endDate=${endDate}`
-        );
+      const { data } = await axios.get(
+        `/expense?userId=${userId}&startDate=${startDate}&endDate=${endDate}`
+      );
 
-        setNormalExpenses(data.normalExpenses || []);
-        setOtherExpenses(data.otherExpenses || []);
-      } catch (err) {
-        console.error("Error fetching expenses:", err);
-      }
-    };
+      setNormalExpenses(data.normalExpenses || []);
+      setOtherExpenses(data.otherExpenses || []);
+    } catch (err) {
+      console.error("Error fetching expenses:", err);
+    }
+  };
 
-    const fetchUserInfo = async () => {
-      try {
-        const { data } = await axios.get(`/users/${userId}`);
-        setUserInfo(data);
+  const fetchUserInfo = async () => {
+    try {
+      const { data } = await axios.get(`/users/${userId}`);
+      setUserInfo(data);
 
-        const hqRes = await axios.get(`/src/hq/${userId}`);
-        setHq(hqRes.data?.placeOfWork || "-");
-      } catch (err) {
-        console.error("Error fetching user info:", err);
-      }
-    };
+      const hqRes = await axios.get(`/src/hq/${userId}`);
+      setHq(hqRes.data?.placeOfWork || "-");
+    } catch (err) {
+      console.error("Error fetching user info:", err);
+    }
+  };
 
-    const fetchApproval = async () => {
-  try {
-    const res = await axios.get(`/approvals/${userId}`);
+  const fetchApproval = async () => {
+    try {
+      const res = await axios.get(`/approvals/${userId}`);
 
-    const monthCode = MONTHS[selectedMonth.month - 1];
+      const monthCode = MONTHS[selectedMonth.month - 1];
 
-    const thisMonth = res.data.find(
-      (a) => a.month === monthCode
-    );
+      const thisMonth = res.data.find(
+        (a) => a.month === monthCode
+      );
 
-    setApprovalStatus(thisMonth || null);
+      setApprovalStatus(thisMonth || null);
+    } catch (err) {
+      console.error("Error fetching approval:", err);
+    }
+  };
 
-  } catch (err) {
-    console.error("Error fetching approval:", err);
-  }
-};
+  fetchExpenses();
+  fetchUserInfo();
+  fetchApproval();
+
+}, [selectedMonth, userId]);
+//   useEffect(() => {
+//     if (!userId) return;
+
+//     const fetchExpenses = async () => {
+//       try {
+//         const { month, year } = selectedMonth;
+
+//         const startDate = dayjs(`${year}-${month}-01`)
+//           .startOf("month")
+//           .format("YYYY-MM-DD");
+
+//         const endDate = dayjs(`${year}-${month}-01`)
+//           .endOf("month")
+//           .format("YYYY-MM-DD");
+
+//         const { data } = await axios.get(
+//           `/expense?userId=${userId}&startDate=${startDate}&endDate=${endDate}`
+//         );
+
+//         setNormalExpenses(data.normalExpenses || []);
+//         setOtherExpenses(data.otherExpenses || []);
+//       } catch (err) {
+//         console.error("Error fetching expenses:", err);
+//       }
+//     };
+
+//     const fetchUserInfo = async () => {
+//       try {
+//         const { data } = await axios.get(`/users/${userId}`);
+//         setUserInfo(data);
+
+//         const hqRes = await axios.get(`/src/hq/${userId}`);
+//         setHq(hqRes.data?.placeOfWork || "-");
+//       } catch (err) {
+//         console.error("Error fetching user info:", err);
+//       }
+//     };
+
+//     const fetchApproval = async () => {
+//   try {
+//     const res = await axios.get(`/approvals/${userId}`);
+
+//     const monthCode = MONTHS[selectedMonth.month - 1];
+
+//     const thisMonth = res.data.find(
+//       (a) => a.month === monthCode
+//     );
+
+//     setApprovalStatus(thisMonth || null);
+
+//   } catch (err) {
+//     console.error("Error fetching approval:", err);
+//   }
+// };
 
 
 
-    fetchExpenses();
-    fetchUserInfo();
-    fetchApproval();
+//     fetchExpenses();
+//     fetchUserInfo();
+//     fetchApproval();
 
-  }, [selectedMonth, userId]);
+//   }, [selectedMonth, userId]);
 
   const handleDelete = async () => {
     try {
@@ -601,7 +660,9 @@ const handleAddOtherExpense = async () => {
   try {
     const payload = {
       userId,
-      date: newOtherExpense.date || undefined,
+      date: newOtherExpense.date
+  ? dayjs(newOtherExpense.date).format("DD-MM-YYYY")
+  : undefined,
       billNo: newOtherExpense.billNo || undefined,
       description: newOtherExpense.description || undefined,
       amount: newOtherExpense.amount
