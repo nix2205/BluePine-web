@@ -36,7 +36,7 @@ export default function TreeNode({ user, level = 0 }) {
               : "bg-gray-100 text-gray-700"
           }`}
         >
-          {user.role}
+          {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
         </span>
       </div>
 

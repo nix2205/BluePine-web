@@ -947,7 +947,9 @@ export default function SrcTable({ srcList, srcConfig, viewedUserRole }) {
   viewedUserRole === "admin" || viewedUserRole === "manager";
 
   const showUserId =
-  viewedUserRole === "admin" || viewedUserRole === "manager";
+  viewedUserRole === "admin" ||
+  viewedUserRole === "manager" ||
+  !viewedUserRole;   // 👈 allows MyDashboard case
 
   const cancelEdit = () => {
     setEditingId(null);
