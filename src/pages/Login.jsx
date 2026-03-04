@@ -95,6 +95,109 @@
 
 
 
+// import { useState } from "react";
+// import { useNavigate } from "react-router-dom";
+// import axios from "axios";
+// import { useAuth } from "../context/AuthContext";
+// import LoginLayout from "../layouts/LoginLayout";
+
+// export default function Login() {
+//   const [userId, setUserId] = useState("");
+//   const [password, setPassword] = useState("");
+//   const { login } = useAuth();
+//   const navigate = useNavigate();
+//   const [loading, setLoading] = useState(false);
+
+
+//   const handleLogin = async (e) => {
+//   e.preventDefault();
+
+//   try {
+//     const res = await axios.post(
+//       `${process.env.REACT_APP_API_BASE_URL}/auth/login`,
+//       { userId, password }
+//     );
+
+//     const { user, token } = res.data;
+
+//     // 🔥 store everything in ONE place
+//     login(user, token);
+
+//     // 🔥 Role-based navigation
+//     if (user.role === "executive") {
+//       navigate("/executive-dashboard");
+//     } else if (user.role === "admin" || user.role === "manager") {
+//       navigate("/dashboard");
+//     } else {
+//       navigate("/");
+//     }
+
+//   } catch (err) {
+//     console.error(err);
+//     alert(err.response?.data?.message || "Login failed");
+//   }
+// };
+
+// //   const handleLogin = async (e) => {
+// //   e.preventDefault();
+
+// //   try {
+// //     const res = await axios.post(
+// //   `${process.env.REACT_APP_API_BASE_URL}/auth/login`,
+// //   { userId, password }
+// // );
+
+// //     const user = res.data.user;
+
+// //     login(user);
+// //     localStorage.setItem("token", res.data.token);
+
+// //     // 🔥 Role-based navigation
+// //     if (user.role === "executive") {
+// //       navigate("/executive-dashboard");
+// //     } else if (user.role === "admin" || user.role === "manager") {
+// //       navigate("/dashboard"); // your admin dashboard route
+// //     } else {
+// //       navigate("/"); // fallback
+// //     }
+
+// //   } catch (err) {
+// //     console.error(err);
+// //     alert("Login failed");
+// //   }
+// // };
+
+
+//   return (
+//     <LoginLayout>
+//       <form onSubmit={handleLogin} className="space-y-4">
+//         <input
+//           placeholder="UserId"
+//           className="w-full border p-2 rounded"
+//           value={userId}
+//           onChange={(e) => setUserId(e.target.value)}
+//         />
+//         <input
+//           type="password"
+//           placeholder="Password"
+//           className="w-full border p-2 rounded"
+//           value={password}
+//           onChange={(e) => setPassword(e.target.value)}
+//         />
+//         <button className="w-full bg-[#1f3a5f] text-white p-2 rounded">
+//           Login
+//         </button>
+//       </form>
+//     </LoginLayout>
+//   );
+// }
+
+
+
+
+
+
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -106,12 +209,14 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
-
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e) => {
   e.preventDefault();
 
   try {
+    setLoading(true);
+
     const res = await axios.post(
       `${process.env.REACT_APP_API_BASE_URL}/auth/login`,
       { userId, password }
@@ -134,6 +239,8 @@ export default function Login() {
   } catch (err) {
     console.error(err);
     alert(err.response?.data?.message || "Login failed");
+  } finally {
+    setLoading(false);
   }
 };
 
@@ -183,8 +290,11 @@ export default function Login() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button className="w-full bg-[#1f3a5f] text-white p-2 rounded">
-          Login
+        <button
+          disabled={loading}
+          className="w-full bg-[#1f3a5f] text-white p-2 rounded"
+        >
+          {loading ? "Logging in..." : "Login"}
         </button>
       </form>
     </LoginLayout>

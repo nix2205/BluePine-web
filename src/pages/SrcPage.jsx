@@ -145,6 +145,7 @@ export default function SrcPage() {
   //const [oldPassword, setOldPassword] = useState("");
   //const [newPassword, setNewPassword] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
+  const isManager = user?.role === "manager";
   
 
   const fetchData = async () => {
@@ -288,7 +289,37 @@ export default function SrcPage() {
     </div>
 
     {/* PASSWORD */}
-    <div className="flex flex-col space-y-2">
+    {/* PASSWORD */}
+<div className="flex flex-col space-y-2">
+  <label className="text-sm text-gray-500 font-medium">
+    Password
+  </label>
+
+  <input
+    value={isManager ? "****" : passwordValue}
+    disabled={isManager || !editingPassword}
+    onChange={(e) => setPasswordValue(e.target.value)}
+    className="input"
+  />
+
+  {!isManager && (
+    <div className="pt-1">
+      {editingPassword ? (
+        <button onClick={resetPassword} className="btn-blue">
+          Save
+        </button>
+      ) : (
+        <button
+          onClick={() => setEditingPassword(true)}
+          className="btn-gray"
+        >
+          Edit
+        </button>
+      )}
+    </div>
+  )}
+</div>
+    {/* <div className="flex flex-col space-y-2">
       <label className="text-sm text-gray-500 font-medium">
         Password
       </label>
@@ -313,7 +344,7 @@ export default function SrcPage() {
           </button>
         )}
       </div>
-    </div>
+    </div> */}
 
   </div>
 </div>

@@ -571,7 +571,7 @@ export default function NFWPage() {
         </select>
 
         {/* KMs */}
-        <label style={styles.label}>KM's</label>
+        <label style={styles.label}>To & Fro KM's</label>
         <input
           type="number"
           value={kms}
