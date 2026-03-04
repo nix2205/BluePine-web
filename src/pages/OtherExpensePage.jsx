@@ -553,14 +553,16 @@ export default function OtherExpensePage() {
 
         {/* Date */}
         <label style={styles.label}>Select Date:</label>
-        <input
-          type="date"
-          value={date}
-          min={minDate}
-          max={maxDate}
-          onChange={(e) => setDate(e.target.value)}
-          style={styles.input}
-        />
+<input
+  type="date"
+  value={date}
+  min={minDate}
+  max={maxDate}
+  onChange={(e) => setDate(e.target.value)}
+  style={styles.input}
+/>
+
+<div style={styles.dateHint}>DD-MM-YYYY</div>
 
         {/* Dynamic Rows */}
         {rows.map((row, index) => (
@@ -622,6 +624,15 @@ export default function OtherExpensePage() {
 }
 
 const styles = {
+
+  dateHint: {
+  fontSize: "12px",
+  color: "#666",
+  marginTop: "-6px",
+  marginBottom: "10px",
+  fontWeight: "500",
+  letterSpacing: "1px",
+},
   card: {
     maxWidth: "600px",
     margin: "40px auto",

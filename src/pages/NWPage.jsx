@@ -571,14 +571,16 @@ export default function NWPage() {
       <div style={styles.card}>
 
         <label style={styles.label}>Select date:</label>
-        <input
-          type="date"
-          value={date}
-          min={minDate}
-          max={maxDate}
-          onChange={(e) => setDate(e.target.value)}
-          style={styles.input}
-        />
+<input
+  type="date"
+  value={date}
+  min={minDate}
+  max={maxDate}
+  onChange={(e) => setDate(e.target.value)}
+  style={styles.input}
+/>
+
+<div style={styles.dateHint}>DD-MM-YYYY</div>
 
         <label style={styles.label}>Select reason:</label>
         <select
@@ -621,6 +623,17 @@ export default function NWPage() {
 }
 
 const styles = {
+
+  dateHint: {
+  fontSize: "12px",
+  color: "#666",
+  marginTop: "-6px",
+  marginBottom: "8px",
+  fontWeight: "600",
+  letterSpacing: "1px",
+},
+
+
   card: {
     maxWidth: "450px",
     margin: "40px auto",
