@@ -932,7 +932,6 @@ export default function SrcTable({ srcList, srcConfig, viewedUserRole }) {
   const startEdit = (src) => {
     setEditingId(src._id);
     setEditForm({
-      placeOfWork: src.placeOfWork,
       station: src.station,
       radius: src.radius,
       MOT: src.MOT,
@@ -1078,27 +1077,17 @@ export default function SrcTable({ srcList, srcConfig, viewedUserRole }) {
 
 
                 {/* PLACE */}
-{/* <td className="px-4 py-3">
-  {isEditing ? (
-    <input
-      className="input w-full"
-      value={editForm.placeOfWork}
-      onChange={(e) =>
-        setEditForm({ ...editForm, placeOfWork: e.target.value })
-      }
-    />
-  ) : (
-    <span>
-      {src.placeOfWork}
-      {showUserId && src.originUser?.userId && (
-        <span className="text-gray-600 text-s ml-1">
-          ({src.originUser.userId})
-        </span>
-      )}
-    </span>
-  )}
-</td> */}
-
+<td className="px-4 py-3">
+  <span className="block truncate">
+    {src.placeOfWork}
+    {showUserId && src.originUser?.userId && (
+      <span className="text-gray-500 text-xs ml-1">
+        ({src.originUser.userId})
+      </span>
+    )}
+  </span>
+</td>
+{/* 
 <td className="px-4 py-3">
   {isEditing ? (
     <input
@@ -1118,7 +1107,7 @@ export default function SrcTable({ srcList, srcConfig, viewedUserRole }) {
       )}
     </span>
   )}
-</td>
+</td> */}
 
                 {/* STATION */}
                 <td className="px-4 py-3">
