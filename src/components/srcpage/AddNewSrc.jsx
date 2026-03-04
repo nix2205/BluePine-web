@@ -493,6 +493,8 @@ import { useParams } from "react-router-dom";
 export default function AddNewSRC({ setRows }) {
   const { userId } = useParams();
 
+  const [submitting, setSubmitting] = useState(false);
+
   const [form, setForm] = useState({
     placeOfWork: "",
     station: "HQ",
@@ -504,48 +506,53 @@ export default function AddNewSRC({ setRows }) {
     TA: "",
   });
 
-  const submit = async () => {
-    try {
-      const payload = {
-        user: userId,
-        radius: Number(form.radius),
-        placeOfWork: form.placeOfWork.trim(),
-        station: form.station,
-        MOT: form.station === "HQ" ? "Local" : form.MOT,
-        kms: form.station === "HQ" ? 0 : Number(form.kms),
-      };
+const submit = async () => {
+  try {
+    setSubmitting(true);
 
-      if (form.RsPerKm !== "") {
-        payload.RsPerKm = Number(form.RsPerKm);
-      }
+    const payload = {
+      user: userId,
+      radius: Number(form.radius),
+      placeOfWork: form.placeOfWork.trim(),
+      station: form.station,
+      MOT: form.station === "HQ" ? "Local" : form.MOT,
+      kms: form.station === "HQ" ? 0 : Number(form.kms),
+    };
 
-      if (form.TA !== "") {
-        payload.TA = Number(form.TA);
-      }
-
-      if (form.DA !== "") {
-        payload.DA = Number(form.DA);
-      }
-
-      const res = await axios.post("/src", payload);
-
-      setRows((prev) => [...prev, res.data]);
-
-      setForm({
-        placeOfWork: "",
-        station: "HQ",
-        MOT: "Local",
-        radius: "",
-        kms: "",
-        RsPerKm: "",
-        DA: "",
-        TA: "",
-      });
-
-    } catch (err) {
-      alert(err.response?.data?.message || "Create failed");
+    if (form.RsPerKm !== "") {
+      payload.RsPerKm = Number(form.RsPerKm);
     }
-  };
+
+    if (form.TA !== "") {
+      payload.TA = Number(form.TA);
+    }
+
+    if (form.DA !== "") {
+      payload.DA = Number(form.DA);
+    }
+
+    const res = await axios.post("/src", payload);
+
+    setRows((prev) => [...prev, res.data]);
+
+    setForm({
+      placeOfWork: "",
+      station: "HQ",
+      MOT: "Local",
+      radius: "",
+      kms: "",
+      RsPerKm: "",
+      DA: "",
+      TA: "",
+    });
+
+  } catch (err) {
+    alert(err.response?.data?.message || "Create failed");
+  } finally {
+    setSubmitting(false);
+  }
+};
+  
 
   const inputStyle =
     "border border-gray-300 rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-[#1f3a5f]";
@@ -663,9 +670,13 @@ export default function AddNewSRC({ setRows }) {
       </div>
 
       <div className="mt-5">
-        <button onClick={submit} className="btn-submit">
-          Submit
-        </button>
+        <button
+  onClick={submit}
+  disabled={submitting}
+  className={`btn-submit ${submitting ? "opacity-60 cursor-not-allowed" : ""}`}
+>
+  {submitting ? "Submitting..." : "Submit"}
+</button>
       </div>
     </div>
   );

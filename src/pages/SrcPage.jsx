@@ -145,7 +145,7 @@ export default function SrcPage() {
   //const [oldPassword, setOldPassword] = useState("");
   //const [newPassword, setNewPassword] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
-  const isManager = user?.role === "manager";
+  const [loggedRole, setLoggedRole] = useState(null);
   
 
   const fetchData = async () => {
@@ -168,6 +168,15 @@ export default function SrcPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+  const loggedUser = JSON.parse(localStorage.getItem("user"));
+  if (loggedUser?.role) {
+    setLoggedRole(loggedUser.role);
+  }
+}, []);
+
+const isAdmin = loggedRole === "admin";
 
   
 
@@ -295,14 +304,21 @@ export default function SrcPage() {
     Password
   </label>
 
-  <input
+  {/* <input
     value={isManager ? "****" : passwordValue}
     disabled={isManager || !editingPassword}
     onChange={(e) => setPasswordValue(e.target.value)}
     className="input"
-  />
+  /> */}
 
-  {!isManager && (
+  <input
+  value={isAdmin ? passwordValue : "****"}
+  disabled={!isAdmin || !editingPassword}
+  onChange={(e) => setPasswordValue(e.target.value)}
+  className="input"
+/>
+
+  {!isAdmin && (
     <div className="pt-1">
       {editingPassword ? (
         <button onClick={resetPassword} className="btn-blue">
