@@ -177,8 +177,9 @@ export default function SrcPage() {
 }, []);
 
 const isAdmin = loggedRole === "admin";
+const isManager = loggedRole === "manager";
 
-  
+  const canEditPassword = isAdmin || isManager;
 
   useEffect(() => {
     if (userId) fetchData();
@@ -226,6 +227,8 @@ const isAdmin = loggedRole === "admin";
   const confirmChange = window.confirm(
     "If you change configs, all SRCs will be changed. Continue?"
   );
+
+  
 
   if (!confirmChange) return;
 
@@ -311,7 +314,7 @@ const isAdmin = loggedRole === "admin";
     className="input"
   /> */}
 
-  <input
+  {/* <input
   value={isAdmin ? passwordValue : "****"}
   disabled={!isAdmin || !editingPassword}
   onChange={(e) => setPasswordValue(e.target.value)}
@@ -332,7 +335,29 @@ const isAdmin = loggedRole === "admin";
           Edit
         </button>
       )}
-    </div>
+    </div> */}
+    <input
+  value={isAdmin ? passwordValue : "****"}
+  disabled={!canEditPassword || !editingPassword}
+  onChange={(e) => setPasswordValue(e.target.value)}
+  className="input"
+/>
+
+{canEditPassword && (
+  <div className="pt-1">
+    {editingPassword ? (
+      <button onClick={resetPassword} className="btn-blue">
+        Save
+      </button>
+    ) : (
+      <button
+        onClick={() => setEditingPassword(true)}
+        className="btn-gray"
+      >
+        Edit
+      </button>
+    )}
+  </div>
   )}
 </div>
     {/* <div className="flex flex-col space-y-2">
