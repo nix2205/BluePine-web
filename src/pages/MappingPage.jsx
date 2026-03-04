@@ -281,6 +281,8 @@ export default function MappingPage() {
   const [loading, setLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(null);
   const [message, setMessage] = useState("");
+  const [recordingLocation, setRecordingLocation] = useState(false);
+
 
   useEffect(() => {
     const fetchSRC = async () => {
@@ -306,23 +308,31 @@ export default function MappingPage() {
   };
 
   const handleRecordLocation = () => {
-    setMessage("");
+  if (recordingLocation) return;
 
-    if (!navigator.geolocation) {
-      alert("Geolocation not supported");
-      return;
+  setMessage("");
+
+  if (!navigator.geolocation) {
+    alert("Geolocation not supported");
+    return;
+  }
+
+  setRecordingLocation(true);
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      setCoords({
+        lat: position.coords.latitude,
+        lon: position.coords.longitude,
+      });
+      setRecordingLocation(false);
+    },
+    () => {
+      alert("Unable to fetch location");
+      setRecordingLocation(false);
     }
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setCoords({
-          lat: position.coords.latitude,
-          lon: position.coords.longitude,
-        });
-      },
-      () => alert("Unable to fetch location")
-    );
-  };
+  );
+};
 
   const handleCityChange = (cityName) => {
     setSelectedCity(cityName);
@@ -394,12 +404,16 @@ export default function MappingPage() {
 
         {/* ===== RECORD SECTION ===== */}
         <button
-          onClick={handleRecordLocation}
-          style={styles.primaryButton}
-        >
-          📍 Record Current Location
-        </button>
-
+  onClick={handleRecordLocation}
+  disabled={recordingLocation}
+  style={{
+    ...styles.primaryButton,
+    opacity: recordingLocation ? 0.6 : 1,
+    cursor: recordingLocation ? "not-allowed" : "pointer"
+  }}
+>
+  {recordingLocation ? "Recording..." : "📍 Record Current Location"}
+</button>
         {coords && (
           <div style={styles.coordsBox}>
             Latitude: {coords.lat} <br />
@@ -437,12 +451,16 @@ export default function MappingPage() {
 
         {previewData && (
           <button
-            onClick={handleSubmit}
-            disabled={loading}
-            style={styles.saveButton}
-          >
-            {loading ? "Saving..." : "Save Mapping"}
-          </button>
+  onClick={handleSubmit}
+  disabled={loading}
+  style={{
+    ...styles.saveButton,
+    opacity: loading ? 0.6 : 1,
+    cursor: loading ? "not-allowed" : "pointer"
+  }}
+>
+  {loading ? "Saving..." : "Save Mapping"}
+</button>
         )}
 
         {message && (
