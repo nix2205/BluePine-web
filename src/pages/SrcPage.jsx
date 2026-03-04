@@ -318,7 +318,7 @@ const isAdmin = loggedRole === "admin";
   className="input"
 />
 
-  {!isAdmin && (
+  {isAdmin && (
     <div className="pt-1">
       {editingPassword ? (
         <button onClick={resetPassword} className="btn-blue">
