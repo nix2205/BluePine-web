@@ -1,5 +1,122 @@
 
 
+// // import { useEffect, useState } from "react";
+// // import { useParams } from "react-router-dom";
+// // import AppLayout from "../layouts/AppLayout";
+// // import axios from "../utils/axios";
+// // import SrcTable from "../components/srcpage/SrcTable";
+// // import DASection from "../components/srcpage/DASection";
+
+// // export default function SrcPage() {
+// //   const { userId } = useParams();
+
+// //   const [user, setUser] = useState(null);
+// //   const [srcList, setSrcList] = useState([]);
+// //   const [srcConfig, setSrcConfig] = useState(null);
+// //   const [loading, setLoading] = useState(true);
+
+// //   const [editingRs, setEditingRs] = useState(false);
+// //   const [rsValue, setRsValue] = useState(0);
+
+// //   const fetchData = async () => {
+// //     try {
+// //       setLoading(true);
+// //       const [userRes, srcRes, configRes] = await Promise.all([
+// //         axios.get(`/users/${userId}`),
+// //         axios.get(`/src/user/${userId}`),
+// //         axios.get(`/src-config/${userId}`),
+// //       ]);
+
+// //       setUser(userRes.data);
+// //       setSrcList(srcRes.data || []);
+// //       setSrcConfig(configRes.data);
+// //     } catch (err) {
+// //       console.error(err);
+// //     } finally {
+// //       setLoading(false);
+// //     }
+// //   };
+
+// //   useEffect(() => {
+// //     if (userId) fetchData();
+// //   }, [userId]);
+
+// //   useEffect(() => {
+// //     if (srcConfig) setRsValue(srcConfig.RsPerKm);
+// //   }, [srcConfig]);
+
+// //   const saveRsPerKm = async () => {
+// //     await axios.patch(`/src-config/rsperkM/${userId}`, {
+// //       RsPerKm: Number(rsValue),
+// //     });
+// //     setEditingRs(false);
+// //     fetchData();
+// //   };
+
+// //   if (loading || !srcConfig) {
+// //     return (
+// //       <AppLayout title="SRC">
+// //         <p className="p-6">Loading…</p>
+// //       </AppLayout>
+// //     );
+// //   }
+
+// //   return (
+// //     <AppLayout title="Edit SRC" backTo="/admin">
+// //       <div className="space-y-8">
+
+// //         {/* USER DETAILS */}
+// //         <div className="bg-white p-6 rounded-xl shadow">
+// //           <h2 className="font-semibold text-lg mb-4">User Details</h2>
+// //           <div className="grid grid-cols-3 gap-4">
+// //             <input value={user.userId} disabled className="input" />
+// //             <input value={user.username} disabled className="input" />
+// //             <input value="********" disabled className="input" />
+// //           </div>
+// //         </div>
+
+// //         {/* RS PER KM */}
+// //         <div className="bg-white p-6 rounded-xl shadow max-w-md">
+// //           <h2 className="font-semibold text-lg mb-2">Rs per Km</h2>
+
+// //           <input
+// //             type="number"
+// //             value={rsValue}
+// //             disabled={!editingRs}
+// //             onChange={(e) => setRsValue(e.target.value)}
+// //             className="input mt-2"
+// //           />
+
+// //           <div className="mt-3">
+// //             {editingRs ? (
+// //               <button onClick={saveRsPerKm} className="btn-blue">
+// //                 Save
+// //               </button>
+// //             ) : (
+// //               <button onClick={() => setEditingRs(true)} className="btn-gray">
+// //                 Edit
+// //               </button>
+// //             )}
+// //           </div>
+
+// //           <p className="text-xs text-gray-400 mt-2">
+// //             Applies to EX & OS only. HQ always ₹0.
+// //           </p>
+// //         </div>
+
+// //         {/* DA SECTION */}
+// //         <DASection userId={userId} srcConfig={srcConfig} onUpdate={fetchData} />
+
+// //         {/* SRC TABLE */}
+// //         <SrcTable srcList={srcList} srcConfig={srcConfig} />
+
+// //       </div>
+// //     </AppLayout>
+// //   );
+// // }
+
+
+
 // import { useEffect, useState } from "react";
 // import { useParams } from "react-router-dom";
 // import AppLayout from "../layouts/AppLayout";
@@ -15,8 +132,21 @@
 //   const [srcConfig, setSrcConfig] = useState(null);
 //   const [loading, setLoading] = useState(true);
 
+//   /* Rs/Km */
 //   const [editingRs, setEditingRs] = useState(false);
 //   const [rsValue, setRsValue] = useState(0);
+
+//   /* Username reset */
+//   const [editingUsername, setEditingUsername] = useState(false);
+//   const [usernameValue, setUsernameValue] = useState("");
+
+//   /* Password reset */
+//   const [editingPassword, setEditingPassword] = useState(false);
+//   //const [oldPassword, setOldPassword] = useState("");
+//   //const [newPassword, setNewPassword] = useState("");
+//   const [passwordValue, setPasswordValue] = useState("");
+//   const [loggedRole, setLoggedRole] = useState(null);
+  
 
 //   const fetchData = async () => {
 //     try {
@@ -28,6 +158,8 @@
 //       ]);
 
 //       setUser(userRes.data);
+//       setUsernameValue(userRes.data.username);
+//       setPasswordValue(userRes.data.password || "");
 //       setSrcList(srcRes.data || []);
 //       setSrcConfig(configRes.data);
 //     } catch (err) {
@@ -38,6 +170,18 @@
 //   };
 
 //   useEffect(() => {
+//   const loggedUser = JSON.parse(localStorage.getItem("user"));
+//   if (loggedUser?.role) {
+//     setLoggedRole(loggedUser.role);
+//   }
+// }, []);
+
+// const isAdmin = loggedRole === "admin";
+// const isManager = loggedRole === "manager";
+
+//   const canEditPassword = isAdmin || isManager;
+
+//   useEffect(() => {
 //     if (userId) fetchData();
 //   }, [userId]);
 
@@ -45,15 +189,61 @@
 //     if (srcConfig) setRsValue(srcConfig.RsPerKm);
 //   }, [srcConfig]);
 
-//   const saveRsPerKm = async () => {
-//     await axios.patch(`/src-config/rsperkM/${userId}`, {
-//       RsPerKm: Number(rsValue),
+//   /* =====================
+//      SAVE USERNAME
+//   ===================== */
+//   const saveUsername = async () => {
+//     await axios.patch(`/users/${userId}/reset-username`, {
+//       username: usernameValue,
 //     });
-//     setEditingRs(false);
+//     setEditingUsername(false);
 //     fetchData();
 //   };
 
-//   if (loading || !srcConfig) {
+//   /* =====================
+//      RESET PASSWORD
+//   ===================== */
+//  const resetPassword = async () => {
+//   await axios.patch(`/users/${userId}/reset-password`, {
+//     newPassword: passwordValue,
+//   });
+
+//   setEditingPassword(false);
+//   fetchData();
+// };
+
+//   /* =====================
+//      SAVE RS / KM
+//   ===================== */
+//   // const saveRsPerKm = async () => {
+//   //   await axios.patch(`/src-config/rsperkM/${userId}`, {
+//   //     RsPerKm: Number(rsValue),
+//   //   });
+//   //   setEditingRs(false);
+//   //   fetchData();
+//   // };
+
+//   const saveRsPerKm = async () => {
+//   const confirmChange = window.confirm(
+//     "If you change configs, all SRCs will be changed. Continue?"
+//   );
+
+  
+
+//   if (!confirmChange) return;
+
+//   await axios.patch(`/src-config/rsperkM/${userId}`, {
+//     RsPerKm: Number(rsValue),
+//   });
+
+//   // 🔥 Apply config to all non-edited SRCs
+//   await axios.put(`/src-config/apply/${userId}`);
+
+//   setEditingRs(false);
+//   fetchData();
+// };
+
+//   if (loading || !srcConfig || !user) {
 //     return (
 //       <AppLayout title="SRC">
 //         <p className="p-6">Loading…</p>
@@ -65,17 +255,142 @@
 //     <AppLayout title="Edit SRC" backTo="/admin">
 //       <div className="space-y-8">
 
-//         {/* USER DETAILS */}
-//         <div className="bg-white p-6 rounded-xl shadow">
-//           <h2 className="font-semibold text-lg mb-4">User Details</h2>
-//           <div className="grid grid-cols-3 gap-4">
-//             <input value={user.userId} disabled className="input" />
-//             <input value={user.username} disabled className="input" />
-//             <input value="********" disabled className="input" />
-//           </div>
-//         </div>
+//         <div className="bg-white p-8 rounded-xl shadow">
+//   <h2 className="font-semibold text-lg mb-6">User Details</h2>
 
-//         {/* RS PER KM */}
+//   <div className="grid md:grid-cols-3 gap-8">
+
+//     {/* USER ID */}
+//     <div className="flex flex-col space-y-2">
+//       <label className="text-sm text-gray-500 font-medium">
+//         User ID
+//       </label>
+//       <input
+//         value={user.userId}
+//         disabled
+//         className="input"
+//       />
+//     </div>
+
+//     {/* USERNAME */}
+//     <div className="flex flex-col space-y-2">
+//       <label className="text-sm text-gray-500 font-medium">
+//         Username
+//       </label>
+//       <input
+//         value={usernameValue}
+//         disabled={!editingUsername}
+//         onChange={(e) => setUsernameValue(e.target.value)}
+//         className="input"
+//       />
+
+//       <div className="pt-1">
+//         {editingUsername ? (
+//           <button onClick={saveUsername} className="btn-blue">
+//             Save
+//           </button>
+//         ) : (
+//           <button
+//             onClick={() => setEditingUsername(true)}
+//             className="btn-gray"
+//           >
+//             Edit
+//           </button>
+//         )}
+//       </div>
+//     </div>
+
+//     {/* PASSWORD */}
+//     {/* PASSWORD */}
+// <div className="flex flex-col space-y-2">
+//   <label className="text-sm text-gray-500 font-medium">
+//     Password
+//   </label>
+
+//   {/* <input
+//     value={isManager ? "****" : passwordValue}
+//     disabled={isManager || !editingPassword}
+//     onChange={(e) => setPasswordValue(e.target.value)}
+//     className="input"
+//   /> */}
+
+//   {/* <input
+//   value={isAdmin ? passwordValue : "****"}
+//   disabled={!isAdmin || !editingPassword}
+//   onChange={(e) => setPasswordValue(e.target.value)}
+//   className="input"
+// />
+
+//   {isAdmin && (
+//     <div className="pt-1">
+//       {editingPassword ? (
+//         <button onClick={resetPassword} className="btn-blue">
+//           Save
+//         </button>
+//       ) : (
+//         <button
+//           onClick={() => setEditingPassword(true)}
+//           className="btn-gray"
+//         >
+//           Edit
+//         </button>
+//       )}
+//     </div> */}
+//     <input
+//   value={isAdmin ? passwordValue : "****"}
+//   disabled={!canEditPassword || !editingPassword}
+//   onChange={(e) => setPasswordValue(e.target.value)}
+//   className="input"
+// />
+
+// {canEditPassword && (
+//   <div className="pt-1">
+//     {editingPassword ? (
+//       <button onClick={resetPassword} className="btn-blue">
+//         Save
+//       </button>
+//     ) : (
+//       <button
+//         onClick={() => setEditingPassword(true)}
+//         className="btn-gray"
+//       >
+//         Edit
+//       </button>
+//     )}
+//   </div>
+//   )}
+// </div>
+//     {/* <div className="flex flex-col space-y-2">
+//       <label className="text-sm text-gray-500 font-medium">
+//         Password
+//       </label>
+//       <input
+//         value={passwordValue}
+//         disabled={!editingPassword}
+//         onChange={(e) => setPasswordValue(e.target.value)}
+//         className="input"
+//       />
+
+//       <div className="pt-1">
+//         {editingPassword ? (
+//           <button onClick={resetPassword} className="btn-blue">
+//             Save
+//           </button>
+//         ) : (
+//           <button
+//             onClick={() => setEditingPassword(true)}
+//             className="btn-gray"
+//           >
+//             Edit
+//           </button>
+//         )}
+//       </div>
+//     </div> */}
+
+//   </div>
+// </div>
+
+//         {/* ============tf===== RS PER KM ================= */}
 //         <div className="bg-white p-6 rounded-xl shadow max-w-md">
 //           <h2 className="font-semibold text-lg mb-2">Rs per Km</h2>
 
@@ -104,16 +419,22 @@
 //           </p>
 //         </div>
 
-//         {/* DA SECTION */}
+//         {/* ================= DA ================= */}
 //         <DASection userId={userId} srcConfig={srcConfig} onUpdate={fetchData} />
 
-//         {/* SRC TABLE */}
-//         <SrcTable srcList={srcList} srcConfig={srcConfig} />
+//         {/* ================= SRC TABLE ================= */}
+//         <SrcTable srcList={srcList} srcConfig={srcConfig}   viewedUserRole={user.role}/>
 
 //       </div>
 //     </AppLayout>
 //   );
 // }
+
+
+
+
+
+
 
 
 
@@ -135,16 +456,18 @@ export default function SrcPage() {
   /* Rs/Km */
   const [editingRs, setEditingRs] = useState(false);
   const [rsValue, setRsValue] = useState(0);
+  const [loadingRs, setLoadingRs] = useState(false);
 
   /* Username reset */
   const [editingUsername, setEditingUsername] = useState(false);
   const [usernameValue, setUsernameValue] = useState("");
+  const [loadingUsername, setLoadingUsername] = useState(false);
 
   /* Password reset */
   const [editingPassword, setEditingPassword] = useState(false);
-  //const [oldPassword, setOldPassword] = useState("");
-  //const [newPassword, setNewPassword] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
+  const [loadingPassword, setLoadingPassword] = useState(false);
+
   const [loggedRole, setLoggedRole] = useState(null);
   
 
@@ -193,54 +516,59 @@ const isManager = loggedRole === "manager";
      SAVE USERNAME
   ===================== */
   const saveUsername = async () => {
-    await axios.patch(`/users/${userId}/reset-username`, {
-      username: usernameValue,
-    });
-    setEditingUsername(false);
-    fetchData();
+    try {
+      setLoadingUsername(true);
+      await axios.patch(`/users/${userId}/reset-username`, {
+        username: usernameValue,
+      });
+      setEditingUsername(false);
+      fetchData();
+    } finally {
+      setLoadingUsername(false);
+    }
   };
 
   /* =====================
      RESET PASSWORD
   ===================== */
  const resetPassword = async () => {
-  await axios.patch(`/users/${userId}/reset-password`, {
-    newPassword: passwordValue,
-  });
+  try {
+    setLoadingPassword(true);
+    await axios.patch(`/users/${userId}/reset-password`, {
+      newPassword: passwordValue,
+    });
 
-  setEditingPassword(false);
-  fetchData();
+    setEditingPassword(false);
+    fetchData();
+  } finally {
+    setLoadingPassword(false);
+  }
 };
 
   /* =====================
      SAVE RS / KM
   ===================== */
-  // const saveRsPerKm = async () => {
-  //   await axios.patch(`/src-config/rsperkM/${userId}`, {
-  //     RsPerKm: Number(rsValue),
-  //   });
-  //   setEditingRs(false);
-  //   fetchData();
-  // };
-
   const saveRsPerKm = async () => {
   const confirmChange = window.confirm(
     "If you change configs, all SRCs will be changed. Continue?"
   );
 
-  
-
   if (!confirmChange) return;
 
-  await axios.patch(`/src-config/rsperkM/${userId}`, {
-    RsPerKm: Number(rsValue),
-  });
+  try {
+    setLoadingRs(true);
 
-  // 🔥 Apply config to all non-edited SRCs
-  await axios.put(`/src-config/apply/${userId}`);
+    await axios.patch(`/src-config/rsperkM/${userId}`, {
+      RsPerKm: Number(rsValue),
+    });
 
-  setEditingRs(false);
-  fetchData();
+    await axios.put(`/src-config/apply/${userId}`);
+
+    setEditingRs(false);
+    fetchData();
+  } finally {
+    setLoadingRs(false);
+  }
 };
 
   if (loading || !srcConfig || !user) {
@@ -286,8 +614,8 @@ const isManager = loggedRole === "manager";
 
       <div className="pt-1">
         {editingUsername ? (
-          <button onClick={saveUsername} className="btn-blue">
-            Save
+          <button onClick={saveUsername} disabled={loadingUsername} className="btn-blue">
+            {loadingUsername ? "Saving..." : "Save"}
           </button>
         ) : (
           <button
@@ -301,42 +629,12 @@ const isManager = loggedRole === "manager";
     </div>
 
     {/* PASSWORD */}
-    {/* PASSWORD */}
 <div className="flex flex-col space-y-2">
   <label className="text-sm text-gray-500 font-medium">
     Password
   </label>
 
-  {/* <input
-    value={isManager ? "****" : passwordValue}
-    disabled={isManager || !editingPassword}
-    onChange={(e) => setPasswordValue(e.target.value)}
-    className="input"
-  /> */}
-
-  {/* <input
-  value={isAdmin ? passwordValue : "****"}
-  disabled={!isAdmin || !editingPassword}
-  onChange={(e) => setPasswordValue(e.target.value)}
-  className="input"
-/>
-
-  {isAdmin && (
-    <div className="pt-1">
-      {editingPassword ? (
-        <button onClick={resetPassword} className="btn-blue">
-          Save
-        </button>
-      ) : (
-        <button
-          onClick={() => setEditingPassword(true)}
-          className="btn-gray"
-        >
-          Edit
-        </button>
-      )}
-    </div> */}
-    <input
+<input
   value={isAdmin ? passwordValue : "****"}
   disabled={!canEditPassword || !editingPassword}
   onChange={(e) => setPasswordValue(e.target.value)}
@@ -346,8 +644,8 @@ const isManager = loggedRole === "manager";
 {canEditPassword && (
   <div className="pt-1">
     {editingPassword ? (
-      <button onClick={resetPassword} className="btn-blue">
-        Save
+      <button onClick={resetPassword} disabled={loadingPassword} className="btn-blue">
+        {loadingPassword ? "Saving..." : "Save"}
       </button>
     ) : (
       <button
@@ -360,32 +658,6 @@ const isManager = loggedRole === "manager";
   </div>
   )}
 </div>
-    {/* <div className="flex flex-col space-y-2">
-      <label className="text-sm text-gray-500 font-medium">
-        Password
-      </label>
-      <input
-        value={passwordValue}
-        disabled={!editingPassword}
-        onChange={(e) => setPasswordValue(e.target.value)}
-        className="input"
-      />
-
-      <div className="pt-1">
-        {editingPassword ? (
-          <button onClick={resetPassword} className="btn-blue">
-            Save
-          </button>
-        ) : (
-          <button
-            onClick={() => setEditingPassword(true)}
-            className="btn-gray"
-          >
-            Edit
-          </button>
-        )}
-      </div>
-    </div> */}
 
   </div>
 </div>
@@ -404,8 +676,8 @@ const isManager = loggedRole === "manager";
 
           <div className="mt-3">
             {editingRs ? (
-              <button onClick={saveRsPerKm} className="btn-blue">
-                Save
+              <button onClick={saveRsPerKm} disabled={loadingRs} className="btn-blue">
+                {loadingRs ? "Saving..." : "Save"}
               </button>
             ) : (
               <button onClick={() => setEditingRs(true)} className="btn-gray">
