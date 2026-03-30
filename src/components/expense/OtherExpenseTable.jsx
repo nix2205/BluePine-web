@@ -946,11 +946,19 @@ export default function OtherExpenseTable({
                       />
                     ) : (
                       <>
-                        {expense.extraAmount > 0 && (
+
+                      {expense.extraAmount !== 0 && expense.extraAmount !== undefined && (
+  <span className="ml-1 text-blue-600 font-semibold">
+    {expense.extraAmount > 0
+      ? `+(${expense.extraAmount})`
+      : `-(${Math.abs(expense.extraAmount)})`}
+  </span>
+)}
+                        {/* {expense.extraAmount > 0 && (
                           <span className="ml-1 text-blue-600 font-semibold">
                             +({expense.extraAmount})
                           </span>
-                        )}
+                        )} */}
                         <button
                           onClick={() => {
                             setEditing({

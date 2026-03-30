@@ -1264,11 +1264,18 @@ const formattedDate = dayjs(
                     />
                   ) : (
                     <>
-                      {expense.ExtraTA > 0 && (
+                    {expense.ExtraTA !== 0 && expense.ExtraTA !== undefined && (
+  <span className="ml-1 text-blue-600 font-semibold">
+    {expense.ExtraTA > 0
+      ? `+(${expense.ExtraTA})`
+      : `-(${Math.abs(expense.ExtraTA)})`}
+  </span>
+)}
+                      {/* {expense.ExtraTA > 0 && (
                         <span className="ml-1 text-blue-600 font-semibold">
                           +({expense.ExtraTA})
                         </span>
-                      )}
+                      )} */}
                       <button
                         onClick={() => {
                           setEditing({
@@ -1342,11 +1349,18 @@ const formattedDate = dayjs(
                     />
                   ) : (
                     <>
-                      {expense.ExtraDA > 0 && (
+                      {/* {expense.ExtraDA > 0 && (
                         <span className="ml-1 text-blue-600 font-semibold">
                           +({expense.ExtraDA})
                         </span>
-                      )}
+                      )} */}
+                      {expense.ExtraDA !== 0 && expense.ExtraDA !== undefined && (
+  <span className="ml-1 text-blue-600 font-semibold">
+    {expense.ExtraDA > 0
+      ? `+(${expense.ExtraDA})`
+      : `-(${Math.abs(expense.ExtraDA)})`}
+  </span>
+)}
                       <button
                         onClick={() => {
                           setEditing({
