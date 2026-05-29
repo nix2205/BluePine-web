@@ -1,70 +1,71 @@
-# Getting Started with Create React App
+Blue Pine
+Overview
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Blue Pine is a role-based expense management and field activity tracking platform designed to streamline attendance management, travel expense calculations, location mapping, and reporting for organizations with field operations.
 
-## Available Scripts
+The system automates Travel Allowance (TA) and Daily Allowance (DA) calculations based on user-assigned locations, reducing manual work and improving operational efficiency.
 
-In the project directory, you can run:
+User Roles
+Executive
+Mark attendance
+Submit daily activity logs
+Map locations
+View expense statements
+Track working and non-working days
+Manager
+Manage executives
+Configure cities and allowances
+Review activities and reports
+Admin
+Create and manage users
+Configure HQ, EX, and OS locations
+Set TA/DA policies
+Access organization-wide reports
+Key Features
+Role-based authentication and authorization
+Attendance management
+Automated TA and DA calculations
+Expense statement generation
+Location mapping system
+Working and non-working day tracking
+User and city management
+Reporting and analytics dashboard
+What Makes Blue Pine Unique?
+Automatic TA/DA calculation based on configured Headquarters (HQ), Ex-Station (EX), and Out-Station (OS) locations.
+Centralized management of attendance, expenses, and field activities.
+Location mapping module for maintaining field coverage records.
+Configurable city-wise travel and allowance policies.
+End-to-end workflow support for executives, managers, and administrators.
+Technology Stack
 
-### `npm start`
+Frontend
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+React.js
+React Router
+Axios
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Backend
 
-### `npm test`
+Node.js
+Express.js
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Database
 
-### `npm run build`
+MongoDB
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Authentication
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+JWT Authentication
+Screenshots
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+(Add screenshots here)
 
-### `npm run eject`
+Future Enhancements
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+🚧 Visit Matrix Module
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+A centralized dashboard currently under development that will provide a consolidated view of employee visits, activities, and operational updates in a single interface for easier monitoring and analysis.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Developed With
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+MongoDB • Express.js • React.js • Node.js
