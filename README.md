@@ -1,5 +1,9 @@
 # Blue Pine
 
+*A full-stack MERN application for expense management, attendance tracking, field activity monitoring, and automated TA/DA calculations.*
+
+🌐 **Live Demo:** https://blue-pine-web.vercel.app/login
+
 ## Overview
 
 Blue Pine is a role-based expense management and field activity tracking platform designed to streamline attendance management, travel expense calculations, location mapping, and reporting for organizations with field operations.
