@@ -2,7 +2,14 @@
 
 *A full-stack MERN application for expense management, attendance tracking, field activity monitoring, and automated TA/DA calculations.*
 
-🌐 **Live Demo:** https://blue-pine-web.vercel.app/login
+| Resource | Link |
+|----------|------|
+| 🌐 Live Demo | https://blue-pine-web.vercel.app/login |
+| 🔗 Frontend Repository | https://github.com/nix2205/BluePine-web |
+| 🔗 Backend Repository | https://github.com/nix2205/BluePine-server |
+| 🎥 Demo Video | https://youtu.be/llMPQUKH5GU |
+
+---
 
 ## Overview
 
@@ -106,3 +113,12 @@ A centralized dashboard currently under development that provides a consolidated
 ## Developed With
 
 MongoDB • Express.js • React.js • Node.js
+
+## Project Evolution
+
+Blue Pine is the successor to **Pharma Tracker**, an earlier expense tracking and field activity management system. The lessons learned from the first version were used to redesign the platform with a more flexible hierarchy structure, improved automation, enhanced location mapping, and a scalable architecture.
+
+### Previous Version (Pharma Tracker)
+- Frontend: https://github.com/nix2205/Project-root-client
+- Backend: https://github.com/nix2205/Project-root-server
+- Demo Video: https://youtu.be/llMPQUKH5GU
